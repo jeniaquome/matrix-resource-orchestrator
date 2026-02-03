@@ -8,7 +8,7 @@ const availabilityColors = {
   available: 'bg-green-100 border-green-300',
   'partially-available': 'bg-yellow-100 border-yellow-300',
   unavailable: 'bg-red-100 border-red-300',
-  'on-leave': 'bg-gray-100 border-gray-300',
+  'on-leave': 'bg-slate-100 border-gray-300',
 };
 
 const availabilityDot = {
@@ -37,9 +37,9 @@ export function ResourceMatrix() {
     : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Resource Availability Matrix</h3>
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900">Resource Availability Matrix</h3>
         <div className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1">
           {silos.map((silo) => (
             <button
@@ -47,8 +47,8 @@ export function ResourceMatrix() {
               onClick={() => setFilterSilo(silo)}
               className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${displaySettings.animations ? 'transition-colors' : ''} ${
                 filterSilo === silo
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-slate-800 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
               style={
                 filterSilo === silo && silo !== 'all'
@@ -71,17 +71,17 @@ export function ResourceMatrix() {
             <div
               key={resource.id}
               className={`${displaySettings.compactView ? 'p-2' : 'p-3'} rounded-lg border cursor-pointer ${displaySettings.animations ? 'transition-all hover:shadow-md' : ''} ${
-                displaySettings.showAvailability ? availabilityColors[resource.availability] : 'bg-white border-gray-200'
+                displaySettings.showAvailability ? availabilityColors[resource.availability] : 'bg-white border-slate-200'
               } ${isOverallocated ? 'ring-2 ring-red-500' : ''}`}
               onClick={() => setSelectedResource(resource.id)}
             >
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <p className={`font-medium text-gray-900 ${displaySettings.compactView ? 'text-xs' : 'text-sm'}`}>
+                  <p className={`font-medium text-slate-900 ${displaySettings.compactView ? 'text-xs' : 'text-sm'}`}>
                     {resource.name}
                   </p>
                   {!displaySettings.compactView && (
-                    <p className="text-xs text-gray-500">{resource.role}</p>
+                    <p className="text-xs text-slate-500">{resource.role}</p>
                   )}
                 </div>
                 {displaySettings.showAvailability && (
@@ -98,12 +98,12 @@ export function ResourceMatrix() {
 
               <div className={displaySettings.compactView ? 'mt-1' : 'mt-2'}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-gray-500">Utilization</span>
-                  <span className={isOverallocated ? 'text-red-600 font-medium' : 'text-gray-700'}>
+                  <span className="text-slate-500">Utilization</span>
+                  <span className={isOverallocated ? 'text-red-600 font-medium' : 'text-slate-700'}>
                     {resource.allocatedHours}h / {resource.totalCapacity}h
                   </span>
                 </div>
-                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${displaySettings.animations ? 'transition-all' : ''} ${
                       isOverallocated
@@ -122,13 +122,13 @@ export function ResourceMatrix() {
                   {resource.skills.slice(0, 2).map((skill) => (
                     <span
                       key={skill}
-                      className="px-1.5 py-0.5 bg-gray-100 rounded text-xs text-gray-600"
+                      className="px-1.5 py-0.5 bg-slate-100 rounded text-xs text-slate-600"
                     >
                       {skill}
                     </span>
                   ))}
                   {resource.skills.length > 2 && (
-                    <span className="px-1.5 py-0.5 bg-gray-100 rounded text-xs text-gray-500">
+                    <span className="px-1.5 py-0.5 bg-slate-100 rounded text-xs text-slate-500">
                       +{resource.skills.length - 2}
                     </span>
                   )}
@@ -140,7 +140,7 @@ export function ResourceMatrix() {
       </div>
 
       {displaySettings.showAvailability && (
-        <div className="mt-4 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-gray-500">
+        <div className="mt-4 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-slate-500">
           <div className="flex items-center gap-1">
             <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
             <span>Available</span>

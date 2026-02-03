@@ -103,19 +103,19 @@ export function ProfilePanel() {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white text-sm font-medium hover:ring-2 hover:ring-emerald-200 transition-all"
+        className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-full flex items-center justify-center text-white text-sm font-medium hover:ring-2 hover:ring-teal-200 transition-all"
         aria-label="Profile menu"
       >
         {profile.initials}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-80 max-w-[320px] bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
-          {/* Profile Header */}
-          <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 text-white">
+        <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-80 max-w-[320px] bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden">
+          {/* Profile Header - Brand gradient */}
+          <div className="bg-gradient-to-br from-teal-600 to-teal-800 p-6 text-white">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold backdrop-blur-sm">
                   {profile.initials}
                 </div>
                 <div>
@@ -134,10 +134,10 @@ export function ProfilePanel() {
                       type="text"
                       value={editedProfile.role}
                       onChange={(e) => setEditedProfile({ ...editedProfile, role: e.target.value })}
-                      className="bg-white/20 text-indigo-100 placeholder-white/60 px-2 py-1 rounded text-sm w-full mt-1 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="bg-white/20 text-teal-100 placeholder-white/60 px-2 py-1 rounded text-sm w-full mt-1 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
                     />
                   ) : (
-                    <p className="text-indigo-100 text-sm">{profile.role}</p>
+                    <p className="text-teal-100 text-sm">{profile.role}</p>
                   )}
                 </div>
               </div>
@@ -176,47 +176,47 @@ export function ProfilePanel() {
           {/* Profile Details */}
           <div className="p-4 space-y-3">
             <div className="flex items-center gap-3 text-sm">
-              <Mail className="w-4 h-4 text-gray-400" />
+              <Mail className="w-4 h-4 text-slate-400" />
               {isEditing ? (
                 <input
                   type="email"
                   value={editedProfile.email}
                   onChange={(e) => setEditedProfile({ ...editedProfile, email: e.target.value })}
-                  className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="flex-1 px-2 py-1 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               ) : (
-                <span className="text-gray-600">{profile.email}</span>
+                <span className="text-slate-600">{profile.email}</span>
               )}
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <Building2 className="w-4 h-4 text-gray-400" />
+              <Building2 className="w-4 h-4 text-slate-400" />
               {isEditing ? (
                 <input
                   type="text"
                   value={editedProfile.department}
                   onChange={(e) => setEditedProfile({ ...editedProfile, department: e.target.value })}
-                  className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="flex-1 px-2 py-1 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               ) : (
-                <span className="text-gray-600">{profile.department}</span>
+                <span className="text-slate-600">{profile.department}</span>
               )}
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <MapPin className="w-4 h-4 text-gray-400" />
+              <MapPin className="w-4 h-4 text-slate-400" />
               {isEditing ? (
                 <input
                   type="text"
                   value={editedProfile.location}
                   onChange={(e) => setEditedProfile({ ...editedProfile, location: e.target.value })}
-                  className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="flex-1 px-2 py-1 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               ) : (
-                <span className="text-gray-600">{profile.location}</span>
+                <span className="text-slate-600">{profile.location}</span>
               )}
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <Calendar className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-600">Joined {profile.joinDate}</span>
+              <Calendar className="w-4 h-4 text-slate-400" />
+              <span className="text-slate-600">Joined {profile.joinDate}</span>
             </div>
           </div>
 
@@ -224,34 +224,34 @@ export function ProfilePanel() {
           {showFullProfile && (
             <div className="px-4 pb-4">
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-gray-50 rounded-lg p-3">
+                <div className="bg-slate-50 rounded-lg p-3">
                   <div className="flex items-center gap-2">
-                    <Briefcase className="w-4 h-4 text-indigo-500" />
-                    <span className="text-xs text-gray-500">Projects Owned</span>
+                    <Briefcase className="w-4 h-4 text-teal-600" />
+                    <span className="text-xs text-slate-500">Projects Owned</span>
                   </div>
-                  <p className="text-xl font-bold text-gray-900 mt-1">{profile.projectsOwned}</p>
+                  <p className="text-xl font-bold text-slate-900 mt-1">{profile.projectsOwned}</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3">
+                <div className="bg-slate-50 rounded-lg p-3">
                   <div className="flex items-center gap-2">
-                    <Award className="w-4 h-4 text-emerald-500" />
-                    <span className="text-xs text-gray-500">Teams Managed</span>
+                    <Award className="w-4 h-4 text-orange-500" />
+                    <span className="text-xs text-slate-500">Teams Managed</span>
                   </div>
-                  <p className="text-xl font-bold text-gray-900 mt-1">{profile.teamsManaged}</p>
+                  <p className="text-xl font-bold text-slate-900 mt-1">{profile.teamsManaged}</p>
                 </div>
               </div>
             </div>
           )}
 
           {/* Recent Activity */}
-          <div className="border-t border-gray-100">
+          <div className="border-t border-slate-100">
             <div className="p-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-400" />
-                <span className="text-sm font-medium text-gray-700">Recent Activity</span>
+                <Clock className="w-4 h-4 text-slate-400" />
+                <span className="text-sm font-medium text-slate-700">Recent Activity</span>
               </div>
               <button
                 onClick={() => setShowAllActivity(!showAllActivity)}
-                className="text-xs text-indigo-600 hover:text-indigo-700"
+                className="text-xs text-teal-600 hover:text-teal-700 font-medium"
               >
                 {showAllActivity ? 'Show less' : 'View all'}
               </button>
@@ -260,26 +260,26 @@ export function ProfilePanel() {
               {displayedActivity.map((activity, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
+                  className="flex items-center justify-between text-xs p-2 bg-slate-50 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors"
                 >
-                  <span className="text-gray-600 truncate flex-1">{activity.action}</span>
-                  <span className="text-gray-400 ml-2 whitespace-nowrap">{activity.time}</span>
+                  <span className="text-slate-600 truncate flex-1">{activity.action}</span>
+                  <span className="text-slate-400 ml-2 whitespace-nowrap">{activity.time}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Actions */}
-          <div className="border-t border-gray-100 p-2">
+          <div className="border-t border-slate-100 p-2">
             <button
               onClick={() => setShowFullProfile(!showFullProfile)}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-600"
+              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 transition-colors text-sm text-slate-600"
             >
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4" />
                 <span>{showFullProfile ? 'Hide Stats' : 'View Full Profile'}</span>
               </div>
-              <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${showFullProfile ? 'rotate-90' : ''}`} />
+              <ChevronRight className={`w-4 h-4 text-slate-400 transition-transform ${showFullProfile ? 'rotate-90' : ''}`} />
             </button>
 
             {showSignOutConfirm ? (
@@ -294,7 +294,7 @@ export function ProfilePanel() {
                   </button>
                   <button
                     onClick={() => setShowSignOutConfirm(false)}
-                    className="flex-1 px-3 py-1.5 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
+                    className="flex-1 px-3 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors"
                   >
                     Cancel
                   </button>

@@ -295,10 +295,11 @@ export const mockProjects: Project[] = [
   },
 ];
 
+// Brand-aligned silo colors
 export const siloColors: Record<FunctionalSilo, string> = {
-  Biology: '#10B981',
-  Automation: '#F59E0B',
-  CompSci: '#3B82F6',
-  Chemistry: '#8B5CF6',
-  DataScience: '#EC4899',
+  Biology: '#059669',      // Emerald - life sciences
+  Automation: '#D97706',   // Amber - mechanical/engineering
+  CompSci: '#0284C7',      // Sky blue - technology
+  Chemistry: '#7C3AED',    // Violet - chemistry/molecular
+  DataScience: '#DB2777',  // Pink - analytics/data
 };

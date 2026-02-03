@@ -31,17 +31,17 @@ export function ProjectsTable() {
   );
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className={`${displaySettings.compactView ? 'p-2 sm:p-3' : 'p-3 sm:p-4'} border-b border-gray-100`}>
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Projects by Business Impact</h3>
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className={`${displaySettings.compactView ? 'p-2 sm:p-3' : 'p-3 sm:p-4'} border-b border-slate-100`}>
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900">Projects by Business Impact</h3>
         {displaySettings.showROI && (
-          <p className="text-xs sm:text-sm text-gray-500">Sorted by risk-adjusted NPV</p>
+          <p className="text-xs sm:text-sm text-slate-500">Sorted by risk-adjusted NPV</p>
         )}
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[600px]">
-          <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+          <thead className="bg-slate-50 text-xs text-slate-500 uppercase tracking-wider">
             <tr>
               <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Project</th>
               <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Priority</th>
@@ -62,16 +62,16 @@ export function ProjectsTable() {
             {sortedProjects.map((project) => (
               <tr
                 key={project.id}
-                className={`hover:bg-gray-50 cursor-pointer ${displaySettings.animations ? 'transition-colors' : ''} ${
+                className={`hover:bg-slate-50 cursor-pointer ${displaySettings.animations ? 'transition-colors' : ''} ${
                   selectedProject === project.id ? 'bg-blue-50' : ''
                 }`}
                 onClick={() => setSelectedProject(project.id)}
               >
                 <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'}`}>
                   <div>
-                    <p className="font-medium text-gray-900 text-sm sm:text-base">{project.name}</p>
+                    <p className="font-medium text-slate-900 text-sm sm:text-base">{project.name}</p>
                     {!displaySettings.compactView && (
-                      <p className="text-xs text-gray-500 hidden sm:block">{project.owner}</p>
+                      <p className="text-xs text-slate-500 hidden sm:block">{project.owner}</p>
                     )}
                   </div>
                 </td>
@@ -106,7 +106,7 @@ export function ProjectsTable() {
                   </>
                 )}
                 <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'} text-center hidden sm:table-cell`}>
-                  <div className="flex items-center justify-center gap-1 text-gray-500">
+                  <div className="flex items-center justify-center gap-1 text-slate-500">
                     <Users className="w-4 h-4" />
                     <span>{project.allocatedResources.length}</span>
                   </div>
@@ -117,7 +117,7 @@ export function ProjectsTable() {
                   </span>
                 </td>
                 <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'}`}>
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
                 </td>
               </tr>
             ))}

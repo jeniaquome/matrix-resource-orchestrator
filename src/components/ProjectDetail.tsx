@@ -26,13 +26,13 @@ export function ProjectDetail() {
 
   return (
     <div className="fixed inset-0 sm:inset-y-0 sm:left-auto sm:right-0 w-full sm:max-w-lg bg-white shadow-2xl z-50 overflow-y-auto">
-      <div className="sticky top-0 bg-white border-b border-gray-100 p-3 sm:p-4 flex items-center justify-between">
-        <h2 className="text-base sm:text-lg font-semibold text-gray-900 truncate pr-2">{project.name}</h2>
+      <div className="sticky top-0 bg-white border-b border-slate-100 p-3 sm:p-4 flex items-center justify-between">
+        <h2 className="text-base sm:text-lg font-semibold text-slate-900 truncate pr-2">{project.name}</h2>
         <button
           onClick={() => setSelectedProject(null)}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
+          className="p-2 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
         >
-          <X className="w-5 h-5 text-gray-500" />
+          <X className="w-5 h-5 text-slate-500" />
         </button>
       </div>
 
@@ -42,7 +42,7 @@ export function ProjectDetail() {
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${
             project.status === 'active' ? 'bg-green-100 text-green-700' :
             project.status === 'planned' ? 'bg-blue-100 text-blue-700' :
-            'bg-gray-100 text-gray-700'
+            'bg-slate-100 text-slate-700'
           }`}>
             {project.status}
           </span>
@@ -56,18 +56,18 @@ export function ProjectDetail() {
         </div>
 
         {/* Description */}
-        <p className="text-gray-600">{project.description}</p>
+        <p className="text-slate-600">{project.description}</p>
 
         {/* Owner & Timeline */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div className="flex items-center gap-2 text-sm">
-            <Users className="w-4 h-4 text-gray-400 flex-shrink-0" />
-            <span className="text-gray-500">Owner:</span>
+            <Users className="w-4 h-4 text-slate-400 flex-shrink-0" />
+            <span className="text-slate-500">Owner:</span>
             <span className="font-medium truncate">{project.owner}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
-            <span className="text-gray-500">Timeline:</span>
+            <Calendar className="w-4 h-4 text-slate-400 flex-shrink-0" />
+            <span className="text-slate-500">Timeline:</span>
             <span className="font-medium text-xs sm:text-sm">
               {new Date(project.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} -
               {new Date(project.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
@@ -76,51 +76,51 @@ export function ProjectDetail() {
         </div>
 
         {/* ROI Metrics */}
-        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-3 sm:p-4">
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
-            <TrendingUp className="w-4 h-4 text-purple-500" />
+        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-3 sm:p-4">
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
+            <TrendingUp className="w-4 h-4 text-teal-600" />
             ROI Metrics
           </h3>
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <p className="text-xs text-gray-500 uppercase">Est. Value</p>
-              <p className="text-lg sm:text-xl font-bold text-gray-900">${project.roi.estimatedValue}M</p>
+              <p className="text-xs text-slate-500 uppercase">Est. Value</p>
+              <p className="text-lg sm:text-xl font-bold text-slate-900">${project.roi.estimatedValue}M</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase">Probability</p>
-              <p className="text-lg sm:text-xl font-bold text-gray-900">{project.roi.probability}%</p>
+              <p className="text-xs text-slate-500 uppercase">Probability</p>
+              <p className="text-lg sm:text-xl font-bold text-slate-900">{project.roi.probability}%</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase">Risk-Adj NPV</p>
+              <p className="text-xs text-slate-500 uppercase">Risk-Adj NPV</p>
               <p className="text-lg sm:text-xl font-bold text-green-600">${project.roi.riskAdjustedNPV.toFixed(1)}M</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase">Time to Value</p>
-              <p className="text-lg sm:text-xl font-bold text-gray-900">{project.roi.timeToValue} mo</p>
+              <p className="text-xs text-slate-500 uppercase">Time to Value</p>
+              <p className="text-lg sm:text-xl font-bold text-slate-900">{project.roi.timeToValue} mo</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase">Strategic Alignment</p>
+              <p className="text-xs text-slate-500 uppercase">Strategic Alignment</p>
               <div className="flex items-center gap-1">
                 {[...Array(10)].map((_, i) => (
                   <div
                     key={i}
                     className={`w-2 h-4 rounded-sm ${
-                      i < project.roi.strategicAlignment ? 'bg-purple-500' : 'bg-gray-200'
+                      i < project.roi.strategicAlignment ? 'bg-teal-500' : 'bg-slate-200'
                     }`}
                   />
                 ))}
               </div>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase">Resource Efficiency</p>
-              <p className="text-lg sm:text-xl font-bold text-gray-900">{project.roi.resourceEfficiency}/10</p>
+              <p className="text-xs text-slate-500 uppercase">Resource Efficiency</p>
+              <p className="text-lg sm:text-xl font-bold text-slate-900">{project.roi.resourceEfficiency}/10</p>
             </div>
           </div>
         </div>
 
         {/* Required Silos */}
         <div>
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
             <Target className="w-4 h-4 text-blue-500" />
             Required Silos
           </h3>
@@ -139,7 +139,7 @@ export function ProjectDetail() {
 
         {/* Team */}
         <div>
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
             <Users className="w-4 h-4 text-green-500" />
             Team ({project.allocatedResources.length})
           </h3>
@@ -151,7 +151,7 @@ export function ProjectDetail() {
               return (
                 <div
                   key={allocation.resourceId}
-                  className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg"
+                  className="flex items-center justify-between p-2 sm:p-3 bg-slate-50 rounded-lg"
                 >
                   <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                     <div
@@ -161,13 +161,13 @@ export function ProjectDetail() {
                       {resource.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-medium text-xs sm:text-sm text-gray-900 truncate">{resource.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{allocation.role}</p>
+                      <p className="font-medium text-xs sm:text-sm text-slate-900 truncate">{resource.name}</p>
+                      <p className="text-xs text-slate-500 truncate">{allocation.role}</p>
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0 ml-2">
                     <p className="font-medium text-xs sm:text-sm">{allocation.hoursPerWeek}h/wk</p>
-                    <p className="text-xs text-gray-500">{resource.silo}</p>
+                    <p className="text-xs text-slate-500">{resource.silo}</p>
                   </div>
                 </div>
               );
@@ -177,7 +177,7 @@ export function ProjectDetail() {
 
         {/* Milestones */}
         <div>
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
             <Clock className="w-4 h-4 text-orange-500" />
             Milestones ({completedMilestones}/{totalMilestones})
           </h3>
@@ -190,7 +190,7 @@ export function ProjectDetail() {
                     ? 'bg-green-50 border-green-200'
                     : milestone.blockers?.length
                     ? 'bg-red-50 border-red-200'
-                    : 'bg-gray-50 border-gray-200'
+                    : 'bg-slate-50 border-slate-200'
                 }`}
               >
                 <div className="flex items-start sm:items-center justify-between gap-2">
@@ -202,13 +202,13 @@ export function ProjectDetail() {
                         </svg>
                       </div>
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex-shrink-0" />
+                      <div className="w-5 h-5 rounded-full border-2 border-slate-300 flex-shrink-0" />
                     )}
-                    <span className={`font-medium text-xs sm:text-sm ${milestone.completed ? 'text-green-700' : 'text-gray-900'}`}>
+                    <span className={`font-medium text-xs sm:text-sm ${milestone.completed ? 'text-green-700' : 'text-slate-900'}`}>
                       {milestone.name}
                     </span>
                   </div>
-                  <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
+                  <span className="text-xs text-slate-500 whitespace-nowrap flex-shrink-0">
                     {new Date(milestone.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </span>
                 </div>

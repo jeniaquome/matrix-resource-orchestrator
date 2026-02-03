@@ -21,8 +21,8 @@ export function SiloUtilization() {
   }));
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
-      <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Silo Utilization</h3>
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-4">Silo Utilization</h3>
       <div className="h-48 sm:h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} layout="vertical" margin={{ left: -20, right: 10 }}>
@@ -61,8 +61,8 @@ export function SiloUtilization() {
               className="w-3 h-3 rounded-full mx-auto mb-1"
               style={{ backgroundColor: siloColors[s.silo] }}
             />
-            <p className="text-xs text-gray-600 truncate">{s.silo}</p>
-            <p className="text-xs text-gray-400">{s.availableResources}/{s.totalResources}</p>
+            <p className="text-xs text-slate-600 truncate">{s.silo}</p>
+            <p className="text-xs text-slate-400">{s.availableResources}/{s.totalResources}</p>
           </div>
         ))}
       </div>

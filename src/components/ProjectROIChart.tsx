@@ -37,9 +37,9 @@ export function ProjectROIChart() {
     }));
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Project ROI Landscape</h3>
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900">Project ROI Landscape</h3>
         <div className="flex items-center gap-2 sm:gap-4 text-xs flex-wrap">
           {Object.entries(priorityColors).map(([priority, color]) => (
             <div key={priority} className="flex items-center gap-1">
@@ -78,13 +78,13 @@ export function ProjectROIChart() {
                 const data = payload[0].payload;
                 return (
                   <div className="bg-white p-3 rounded-lg shadow-lg border text-sm max-w-xs">
-                    <p className="font-semibold text-gray-900">{data.name}</p>
+                    <p className="font-semibold text-slate-900">{data.name}</p>
                     <div className="mt-2 space-y-1">
-                      <p><span className="text-gray-500">Est. Value:</span> ${data.y}M</p>
-                      <p><span className="text-gray-500">Probability:</span> {data.x}%</p>
-                      <p><span className="text-gray-500">Risk-Adj NPV:</span> ${data.z.toFixed(1)}M</p>
-                      <p><span className="text-gray-500">Time to Value:</span> {data.timeToValue} months</p>
-                      <p><span className="text-gray-500">Strategic Alignment:</span> {data.strategicAlignment}/10</p>
+                      <p><span className="text-slate-500">Est. Value:</span> ${data.y}M</p>
+                      <p><span className="text-slate-500">Probability:</span> {data.x}%</p>
+                      <p><span className="text-slate-500">Risk-Adj NPV:</span> ${data.z.toFixed(1)}M</p>
+                      <p><span className="text-slate-500">Time to Value:</span> {data.timeToValue} months</p>
+                      <p><span className="text-slate-500">Strategic Alignment:</span> {data.strategicAlignment}/10</p>
                     </div>
                   </div>
                 );
@@ -107,7 +107,7 @@ export function ProjectROIChart() {
         </ResponsiveContainer>
       </div>
 
-      <p className="text-xs text-gray-400 mt-2 text-center">
+      <p className="text-xs text-slate-400 mt-2 text-center">
         Bubble size represents risk-adjusted NPV. Click a project to view details.
       </p>
     </div>

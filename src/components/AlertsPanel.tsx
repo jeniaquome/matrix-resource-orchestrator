@@ -79,10 +79,10 @@ const alertIcons = {
 };
 
 const alertColors = {
-  conflict: 'text-red-500 bg-red-50',
-  milestone: 'text-orange-500 bg-orange-50',
-  approval: 'text-blue-500 bg-blue-50',
-  update: 'text-green-500 bg-green-50',
+  conflict: 'text-red-600 bg-red-50',
+  milestone: 'text-amber-600 bg-amber-50',
+  approval: 'text-sky-600 bg-sky-50',
+  update: 'text-emerald-600 bg-emerald-50',
 };
 
 // Map alert types to notification setting keys
@@ -157,21 +157,21 @@ export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg ${displaySettings.animations ? 'transition-colors' : ''}`}
+        className={`relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg ${displaySettings.animations ? 'transition-colors' : ''}`}
         aria-label="Notifications"
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+          <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-[400px] bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
-          <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+        <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-[400px] bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-gray-900">Notifications</h3>
-              <p className="text-xs text-gray-500">
+              <h3 className="font-semibold text-slate-900">Notifications</h3>
+              <p className="text-xs text-slate-500">
                 {unreadCount} unread
                 {enabledTypesCount < 4 && (
                   <span className="text-amber-600 ml-1">
@@ -183,7 +183,7 @@ export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className={`text-xs text-indigo-600 hover:text-indigo-700 font-medium ${displaySettings.animations ? 'transition-colors' : ''}`}
+                className={`text-xs text-teal-600 hover:text-teal-700 font-medium ${displaySettings.animations ? 'transition-colors' : ''}`}
               >
                 Mark all as read
               </button>
@@ -192,7 +192,7 @@ export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
 
           <div className="max-h-96 overflow-y-auto">
             {filteredAlerts.length === 0 ? (
-              <div className="p-8 text-center text-gray-400">
+              <div className="p-8 text-center text-slate-400">
                 <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
                 <p>No notifications</p>
                 {enabledTypesCount === 0 && (
@@ -207,8 +207,8 @@ export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
                 return (
                   <div
                     key={alert.id}
-                    className={`p-4 border-b border-gray-50 hover:bg-gray-50 cursor-pointer ${displaySettings.animations ? 'transition-colors' : ''} ${
-                      !alert.read ? 'bg-indigo-50/30' : ''
+                    className={`p-4 border-b border-slate-50 hover:bg-slate-50 cursor-pointer ${displaySettings.animations ? 'transition-colors' : ''} ${
+                      !alert.read ? 'bg-teal-50/30' : ''
                     }`}
                     onClick={() => handleAlertClick(alert)}
                   >
@@ -218,7 +218,7 @@ export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
-                          <p className={`text-sm font-medium ${!alert.read ? 'text-gray-900' : 'text-gray-600'}`}>
+                          <p className={`text-sm font-medium ${!alert.read ? 'text-slate-900' : 'text-slate-600'}`}>
                             {alert.title}
                           </p>
                           <button
@@ -226,22 +226,22 @@ export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
                               e.stopPropagation();
                               dismissAlert(alert.id);
                             }}
-                            className={`text-gray-400 hover:text-gray-600 ${displaySettings.animations ? 'transition-colors' : ''}`}
+                            className={`text-slate-400 hover:text-slate-600 ${displaySettings.animations ? 'transition-colors' : ''}`}
                             aria-label="Dismiss notification"
                           >
                             <X className="w-4 h-4" />
                           </button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1 line-clamp-2">{alert.description}</p>
+                        <p className="text-xs text-slate-500 mt-1 line-clamp-2">{alert.description}</p>
                         <div className="flex items-center gap-2 mt-1">
-                          <p className="text-xs text-gray-400">{alert.time}</p>
+                          <p className="text-xs text-slate-400">{alert.time}</p>
                           <span className={`text-xs px-1.5 py-0.5 rounded ${alertColors[alert.type]}`}>
                             {alert.type}
                           </span>
                         </div>
                       </div>
                       {!alert.read && (
-                        <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2" />
+                        <div className="w-2 h-2 bg-teal-500 rounded-full mt-2" />
                       )}
                     </div>
                   </div>
@@ -250,10 +250,10 @@ export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
             )}
           </div>
 
-          <div className="p-3 border-t border-gray-100 bg-gray-50">
+          <div className="p-3 border-t border-slate-100 bg-slate-50">
             <button
               onClick={() => setShowAllNotifications(!showAllNotifications)}
-              className={`w-full text-sm text-indigo-600 hover:text-indigo-700 font-medium ${displaySettings.animations ? 'transition-colors' : ''}`}
+              className={`w-full text-sm text-teal-600 hover:text-teal-700 font-medium ${displaySettings.animations ? 'transition-colors' : ''}`}
             >
               {showAllNotifications
                 ? `Show less`

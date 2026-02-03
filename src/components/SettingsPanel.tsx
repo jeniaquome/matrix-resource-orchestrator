@@ -51,7 +51,7 @@ export function SettingsPanel() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'matrix-orchestrator-data.json';
+    a.download = 'mro-settings-export.json';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -77,11 +77,12 @@ export function SettingsPanel() {
     { id: 'privacy', label: 'Privacy', icon: Shield },
   ];
 
+  // Brand-aligned theme colors
   const themeColors = [
-    { id: 'indigo' as const, from: '#6366f1', to: '#8b5cf6' },
-    { id: 'blue' as const, from: '#3b82f6', to: '#06b6d4' },
-    { id: 'emerald' as const, from: '#10b981', to: '#14b8a6' },
-    { id: 'purple' as const, from: '#8b5cf6', to: '#ec4899' },
+    { id: 'indigo' as const, from: '#0D9488', to: '#115E59', label: 'Teal' },     // Primary brand
+    { id: 'blue' as const, from: '#0284C7', to: '#0369A1', label: 'Ocean' },
+    { id: 'emerald' as const, from: '#059669', to: '#047857', label: 'Forest' },
+    { id: 'purple' as const, from: '#7C3AED', to: '#6D28D9', label: 'Violet' },
   ];
 
   const notificationItems = [
@@ -102,39 +103,39 @@ export function SettingsPanel() {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg ${displaySettings.animations ? 'transition-colors' : ''}`}
+        className={`p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg ${displaySettings.animations ? 'transition-colors' : ''}`}
         aria-label="Settings"
       >
         <Settings className="w-5 h-5" />
       </button>
 
       {isOpen && (
-        <div className="fixed inset-4 sm:inset-auto sm:absolute sm:right-0 sm:mt-2 sm:w-[480px] bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[600px]">
-          <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+        <div className="fixed inset-4 sm:inset-auto sm:absolute sm:right-0 sm:mt-2 sm:w-[480px] bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[600px]">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-teal-600 to-teal-700 text-white">
             <div className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-gray-500" />
-              <h3 className="font-semibold text-gray-900">Settings</h3>
+              <Settings className="w-5 h-5" />
+              <h3 className="font-semibold">Settings</h3>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1 text-gray-400 hover:text-gray-600 rounded"
+              className="p-1 text-white/80 hover:text-white hover:bg-white/10 rounded"
               aria-label="Close settings"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="flex">
+          <div className="flex flex-1 overflow-hidden">
             {/* Sidebar */}
-            <div className="w-40 border-r border-gray-100 bg-gray-50 p-2">
+            <div className="w-40 border-r border-slate-100 bg-slate-50 p-2">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${displaySettings.animations ? 'transition-colors' : ''} ${
                     activeTab === tab.id
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600 hover:bg-gray-100'
+                      ? 'bg-teal-100 text-teal-700'
+                      : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
@@ -147,32 +148,32 @@ export function SettingsPanel() {
             <div className="flex-1 p-4 max-h-96 overflow-y-auto">
               {activeTab === 'notifications' && (
                 <div className="space-y-4">
-                  <p className="text-sm text-gray-500 mb-4">
+                  <p className="text-sm text-slate-500 mb-4">
                     Configure how you receive alerts and notifications.
                   </p>
                   {notificationItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{item.label}</p>
-                        <p className="text-xs text-gray-500">{item.description}</p>
+                        <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                        <p className="text-xs text-slate-500">{item.description}</p>
                       </div>
                       <button
                         onClick={() => setNotificationSettings({ [item.id]: !notificationSettings[item.id] })}
                         className={`relative w-11 h-6 rounded-full ${displaySettings.animations ? 'transition-colors' : ''} ${
-                          notificationSettings[item.id] ? 'bg-indigo-600' : 'bg-gray-200'
+                          notificationSettings[item.id] ? 'bg-teal-600' : 'bg-slate-200'
                         }`}
                         aria-label={`Toggle ${item.label}`}
                       >
                         <span
-                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full ${displaySettings.animations ? 'transition-transform' : ''} ${
+                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow ${displaySettings.animations ? 'transition-transform' : ''} ${
                             notificationSettings[item.id] ? 'translate-x-5' : ''
                           }`}
                         />
                       </button>
                     </div>
                   ))}
-                  <div className="mt-4 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
-                    <p className="text-xs text-indigo-700">
+                  <div className="mt-4 p-3 bg-teal-50 rounded-lg border border-teal-100">
+                    <p className="text-xs text-teal-700">
                       <strong>Active:</strong> {Object.values(notificationSettings).filter(Boolean).length} of {Object.keys(notificationSettings).length} notification types enabled
                     </p>
                   </div>
@@ -181,24 +182,24 @@ export function SettingsPanel() {
 
               {activeTab === 'display' && (
                 <div className="space-y-4">
-                  <p className="text-sm text-gray-500 mb-4">
+                  <p className="text-sm text-slate-500 mb-4">
                     Customize how information is displayed.
                   </p>
                   {displayItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{item.label}</p>
-                        <p className="text-xs text-gray-500">{item.description}</p>
+                        <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                        <p className="text-xs text-slate-500">{item.description}</p>
                       </div>
                       <button
                         onClick={() => setDisplaySettings({ [item.id]: !displaySettings[item.id] })}
                         className={`relative w-11 h-6 rounded-full ${displaySettings.animations ? 'transition-colors' : ''} ${
-                          displaySettings[item.id] ? 'bg-indigo-600' : 'bg-gray-200'
+                          displaySettings[item.id] ? 'bg-teal-600' : 'bg-slate-200'
                         }`}
                         aria-label={`Toggle ${item.label}`}
                       >
                         <span
-                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full ${displaySettings.animations ? 'transition-transform' : ''} ${
+                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow ${displaySettings.animations ? 'transition-transform' : ''} ${
                             displaySettings[item.id] ? 'translate-x-5' : ''
                           }`}
                         />
@@ -206,8 +207,8 @@ export function SettingsPanel() {
                     </div>
                   ))}
 
-                  <div className="pt-4 border-t border-gray-100">
-                    <label className="block text-sm font-medium text-gray-900 mb-2">
+                  <div className="pt-4 border-t border-slate-100">
+                    <label className="block text-sm font-medium text-slate-900 mb-2">
                       Color Theme
                     </label>
                     <div className="flex gap-2">
@@ -216,12 +217,13 @@ export function SettingsPanel() {
                           key={color.id}
                           onClick={() => setDisplaySettings({ colorTheme: color.id })}
                           className={`relative w-8 h-8 rounded-full border-2 ${displaySettings.animations ? 'transition-all' : ''} ${
-                            displaySettings.colorTheme === color.id ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105'
+                            displaySettings.colorTheme === color.id ? 'border-slate-900 scale-110' : 'border-transparent hover:scale-105'
                           }`}
                           style={{
                             background: `linear-gradient(135deg, ${color.from}, ${color.to})`,
                           }}
-                          aria-label={`${color.id} theme`}
+                          aria-label={`${color.label} theme`}
+                          title={color.label}
                         >
                           {displaySettings.colorTheme === color.id && (
                             <Check className="w-4 h-4 text-white absolute inset-0 m-auto" />
@@ -229,8 +231,8 @@ export function SettingsPanel() {
                         </button>
                       ))}
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">
-                      Current theme: <span className="font-medium capitalize">{displaySettings.colorTheme}</span>
+                    <p className="text-xs text-slate-500 mt-2">
+                      Current theme: <span className="font-medium">{themeColors.find(c => c.id === displaySettings.colorTheme)?.label || 'Teal'}</span>
                     </p>
                   </div>
                 </div>
@@ -238,18 +240,18 @@ export function SettingsPanel() {
 
               {activeTab === 'data' && (
                 <div className="space-y-4">
-                  <p className="text-sm text-gray-500 mb-4">
+                  <p className="text-sm text-slate-500 mb-4">
                     Configure data refresh and synchronization.
                   </p>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">
+                    <label className="block text-sm font-medium text-slate-900 mb-2">
                       Auto-refresh Interval
                     </label>
                     <select
                       value={dataSettings.refreshInterval}
                       onChange={(e) => setDataSettings({ refreshInterval: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                     >
                       <option value="1">Every minute</option>
                       <option value="5">Every 5 minutes</option>
@@ -260,13 +262,13 @@ export function SettingsPanel() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">
+                    <label className="block text-sm font-medium text-slate-900 mb-2">
                       Timezone
                     </label>
                     <select
                       value={dataSettings.timezone}
                       onChange={(e) => setDataSettings({ timezone: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                     >
                       <option value="America/Los_Angeles">Pacific Time (PT)</option>
                       <option value="America/Denver">Mountain Time (MT)</option>
@@ -277,13 +279,13 @@ export function SettingsPanel() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">
+                    <label className="block text-sm font-medium text-slate-900 mb-2">
                       Date Format
                     </label>
                     <select
                       value={dataSettings.dateFormat}
                       onChange={(e) => setDataSettings({ dateFormat: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                     >
                       <option value="MM/DD/YYYY">MM/DD/YYYY</option>
                       <option value="DD/MM/YYYY">DD/MM/YYYY</option>
@@ -291,14 +293,14 @@ export function SettingsPanel() {
                     </select>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-100">
+                  <div className="pt-4 border-t border-slate-100">
                     <button
                       onClick={handleExportData}
-                      className={`w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 ${displaySettings.animations ? 'transition-colors' : ''} flex items-center justify-center gap-2`}
+                      className={`w-full px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 ${displaySettings.animations ? 'transition-colors' : ''} flex items-center justify-center gap-2`}
                     >
                       {showExportConfirm ? (
                         <>
-                          <Check className="w-4 h-4 text-green-500" />
+                          <Check className="w-4 h-4 text-emerald-500" />
                           Export Started!
                         </>
                       ) : (
@@ -314,16 +316,16 @@ export function SettingsPanel() {
 
               {activeTab === 'privacy' && (
                 <div className="space-y-4">
-                  <p className="text-sm text-gray-500 mb-4">
+                  <p className="text-sm text-slate-500 mb-4">
                     Manage your privacy and data settings.
                   </p>
 
-                  <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-100">
                     <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-green-500 mt-0.5" />
+                      <Shield className="w-5 h-5 text-emerald-600 mt-0.5" />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">Data Protection</p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm font-medium text-slate-900">Data Protection</p>
+                        <p className="text-xs text-slate-500 mt-1">
                           Your data is encrypted and stored securely. We comply with HIPAA and SOC 2 requirements.
                         </p>
                       </div>
@@ -332,18 +334,18 @@ export function SettingsPanel() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Analytics</p>
-                      <p className="text-xs text-gray-500">Help improve the product with usage data</p>
+                      <p className="text-sm font-medium text-slate-900">Analytics</p>
+                      <p className="text-xs text-slate-500">Help improve the product with usage data</p>
                     </div>
                     <button
                       onClick={() => setPrivacySettings({ analyticsEnabled: !privacySettings.analyticsEnabled })}
                       className={`relative w-11 h-6 rounded-full ${displaySettings.animations ? 'transition-colors' : ''} ${
-                        privacySettings.analyticsEnabled ? 'bg-indigo-600' : 'bg-gray-200'
+                        privacySettings.analyticsEnabled ? 'bg-teal-600' : 'bg-slate-200'
                       }`}
                       aria-label="Toggle analytics"
                     >
                       <span
-                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full ${displaySettings.animations ? 'transition-transform' : ''} ${
+                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow ${displaySettings.animations ? 'transition-transform' : ''} ${
                           privacySettings.analyticsEnabled ? 'translate-x-5' : ''
                         }`}
                       />
@@ -352,13 +354,13 @@ export function SettingsPanel() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Session Timeout</p>
-                      <p className="text-xs text-gray-500">Auto-logout after inactivity</p>
+                      <p className="text-sm font-medium text-slate-900">Session Timeout</p>
+                      <p className="text-xs text-slate-500">Auto-logout after inactivity</p>
                     </div>
                     <select
                       value={privacySettings.sessionTimeout}
                       onChange={(e) => setPrivacySettings({ sessionTimeout: e.target.value })}
-                      className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                     >
                       <option value="30 minutes">30 minutes</option>
                       <option value="1 hour">1 hour</option>
@@ -367,10 +369,10 @@ export function SettingsPanel() {
                     </select>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-100 space-y-2">
+                  <div className="pt-4 border-t border-slate-100 space-y-2">
                     <button
                       onClick={handleDownloadData}
-                      className={`w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 ${displaySettings.animations ? 'transition-colors' : ''} flex items-center justify-center gap-2`}
+                      className={`w-full px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 ${displaySettings.animations ? 'transition-colors' : ''} flex items-center justify-center gap-2`}
                     >
                       <Download className="w-4 h-4" />
                       Download My Data
@@ -388,7 +390,7 @@ export function SettingsPanel() {
                           </button>
                           <button
                             onClick={() => setShowDeleteConfirm(false)}
-                            className="flex-1 px-3 py-1.5 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
+                            className="flex-1 px-3 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors"
                           >
                             Cancel
                           </button>
@@ -409,17 +411,17 @@ export function SettingsPanel() {
             </div>
           </div>
 
-          <div className="p-3 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
+          <div className="p-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
             <button
               onClick={openHelp}
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+              className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
             >
               <HelpCircle className="w-4 h-4" />
               Help
             </button>
             <button
               onClick={() => setIsOpen(false)}
-              className={`px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 ${displaySettings.animations ? 'transition-colors' : ''}`}
+              className={`px-4 py-1.5 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 ${displaySettings.animations ? 'transition-colors' : ''}`}
             >
               Done
             </button>
