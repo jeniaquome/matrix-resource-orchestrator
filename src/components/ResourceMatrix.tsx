@@ -23,12 +23,18 @@ export function ResourceMatrix() {
   const filterSilo = useAppStore(state => state.filterSilo);
   const setFilterSilo = useAppStore(state => state.setFilterSilo);
   const setSelectedResource = useAppStore(state => state.setSelectedResource);
+  const displaySettings = useAppStore(state => state.displaySettings);
 
   const silos: (FunctionalSilo | 'all')[] = ['all', 'Biology', 'Automation', 'CompSci', 'Chemistry', 'DataScience'];
 
   const filteredResources = filterSilo === 'all'
     ? resources
     : resources.filter(r => r.silo === filterSilo);
+
+  // Adjust grid based on compact view
+  const gridClass = displaySettings.compactView
+    ? 'grid-cols-3 md:grid-cols-4 lg:grid-cols-6'
+    : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -39,7 +45,7 @@ export function ResourceMatrix() {
             <button
               key={silo}
               onClick={() => setFilterSilo(silo)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              className={`px-3 py-1 rounded-full text-xs font-medium ${displaySettings.animations ? 'transition-colors' : ''} ${
                 filterSilo === silo
                   ? 'bg-gray-900 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -56,7 +62,7 @@ export function ResourceMatrix() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className={`grid ${gridClass} gap-3`}>
         {filteredResources.map((resource) => {
           const utilizationPercent = Math.round((resource.allocatedHours / resource.totalCapacity) * 100);
           const isOverallocated = resource.allocatedHours > resource.totalCapacity;
@@ -64,27 +70,33 @@ export function ResourceMatrix() {
           return (
             <div
               key={resource.id}
-              className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
-                availabilityColors[resource.availability]
+              className={`${displaySettings.compactView ? 'p-2' : 'p-3'} rounded-lg border cursor-pointer ${displaySettings.animations ? 'transition-all hover:shadow-md' : ''} ${
+                displaySettings.showAvailability ? availabilityColors[resource.availability] : 'bg-white border-gray-200'
               } ${isOverallocated ? 'ring-2 ring-red-500' : ''}`}
               onClick={() => setSelectedResource(resource.id)}
             >
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <p className="font-medium text-gray-900 text-sm">{resource.name}</p>
-                  <p className="text-xs text-gray-500">{resource.role}</p>
+                  <p className={`font-medium text-gray-900 ${displaySettings.compactView ? 'text-xs' : 'text-sm'}`}>
+                    {resource.name}
+                  </p>
+                  {!displaySettings.compactView && (
+                    <p className="text-xs text-gray-500">{resource.role}</p>
+                  )}
                 </div>
-                <div className={`w-2.5 h-2.5 rounded-full ${availabilityDot[resource.availability]}`} />
+                {displaySettings.showAvailability && (
+                  <div className={`w-2.5 h-2.5 rounded-full ${availabilityDot[resource.availability]}`} />
+                )}
               </div>
 
               <div
-                className="inline-block px-2 py-0.5 rounded text-xs text-white mb-2"
+                className={`inline-block px-2 py-0.5 rounded text-xs text-white ${displaySettings.compactView ? 'mb-1' : 'mb-2'}`}
                 style={{ backgroundColor: siloColors[resource.silo] }}
               >
                 {resource.silo}
               </div>
 
-              <div className="mt-2">
+              <div className={displaySettings.compactView ? 'mt-1' : 'mt-2'}>
                 <div className="flex justify-between text-xs mb-1">
                   <span className="text-gray-500">Utilization</span>
                   <span className={isOverallocated ? 'text-red-600 font-medium' : 'text-gray-700'}>
@@ -93,7 +105,7 @@ export function ResourceMatrix() {
                 </div>
                 <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${
+                    className={`h-full rounded-full ${displaySettings.animations ? 'transition-all' : ''} ${
                       isOverallocated
                         ? 'bg-red-500'
                         : utilizationPercent > 80
@@ -105,44 +117,48 @@ export function ResourceMatrix() {
                 </div>
               </div>
 
-              <div className="mt-2 flex flex-wrap gap-1">
-                {resource.skills.slice(0, 2).map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-1.5 py-0.5 bg-gray-100 rounded text-xs text-gray-600"
-                  >
-                    {skill}
-                  </span>
-                ))}
-                {resource.skills.length > 2 && (
-                  <span className="px-1.5 py-0.5 bg-gray-100 rounded text-xs text-gray-500">
-                    +{resource.skills.length - 2}
-                  </span>
-                )}
-              </div>
+              {!displaySettings.compactView && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {resource.skills.slice(0, 2).map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-1.5 py-0.5 bg-gray-100 rounded text-xs text-gray-600"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {resource.skills.length > 2 && (
+                    <span className="px-1.5 py-0.5 bg-gray-100 rounded text-xs text-gray-500">
+                      +{resource.skills.length - 2}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
       </div>
 
-      <div className="mt-4 flex items-center gap-4 text-xs text-gray-500">
-        <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-          <span>Available</span>
+      {displaySettings.showAvailability && (
+        <div className="mt-4 flex items-center gap-4 text-xs text-gray-500">
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+            <span>Available</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+            <span>Partial</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+            <span>Unavailable</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded-full bg-gray-400" />
+            <span>On Leave</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-          <span>Partial</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-          <span>Unavailable</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-gray-400" />
-          <span>On Leave</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

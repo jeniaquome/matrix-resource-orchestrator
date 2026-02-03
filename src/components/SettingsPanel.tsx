@@ -2,43 +2,26 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Settings, X, Bell, Eye, Database, Shield, HelpCircle, Check, Download, Trash2 } from 'lucide-react';
-
-interface SettingToggle {
-  id: string;
-  label: string;
-  description: string;
-  enabled: boolean;
-}
+import { useAppStore } from '@/lib/store';
 
 export function SettingsPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('notifications');
-  const [selectedTheme, setSelectedTheme] = useState('indigo');
   const [showExportConfirm, setShowExportConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
-  const [sessionTimeout, setSessionTimeout] = useState('30 minutes');
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const [notificationSettings, setNotificationSettings] = useState<SettingToggle[]>([
-    { id: 'conflicts', label: 'Resource Conflicts', description: 'Alert when resources are over-allocated', enabled: true },
-    { id: 'milestones', label: 'Milestone Reminders', description: 'Notify before milestone deadlines', enabled: true },
-    { id: 'approvals', label: 'Approval Requests', description: 'Get notified of pending approvals', enabled: true },
-    { id: 'updates', label: 'Project Updates', description: 'Status changes and progress updates', enabled: false },
-  ]);
+  // Get settings from store
+  const notificationSettings = useAppStore((state) => state.notificationSettings);
+  const displaySettings = useAppStore((state) => state.displaySettings);
+  const dataSettings = useAppStore((state) => state.dataSettings);
+  const privacySettings = useAppStore((state) => state.privacySettings);
 
-  const [displaySettings, setDisplaySettings] = useState<SettingToggle[]>([
-    { id: 'compactView', label: 'Compact View', description: 'Show more items in less space', enabled: false },
-    { id: 'showROI', label: 'Show ROI Metrics', description: 'Display financial metrics on cards', enabled: true },
-    { id: 'showAvailability', label: 'Show Availability', description: 'Display resource availability status', enabled: true },
-    { id: 'animations', label: 'Animations', description: 'Enable UI animations and transitions', enabled: true },
-  ]);
-
-  const [dataSettings, setDataSettings] = useState({
-    refreshInterval: '5',
-    timezone: 'America/Los_Angeles',
-    dateFormat: 'MM/DD/YYYY',
-  });
+  // Get setters from store
+  const setNotificationSettings = useAppStore((state) => state.setNotificationSettings);
+  const setDisplaySettings = useAppStore((state) => state.setDisplaySettings);
+  const setDataSettings = useAppStore((state) => state.setDataSettings);
+  const setPrivacySettings = useAppStore((state) => state.setPrivacySettings);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -52,18 +35,6 @@ export function SettingsPanel() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleSetting = (settingId: string, type: 'notification' | 'display') => {
-    if (type === 'notification') {
-      setNotificationSettings(settings =>
-        settings.map(s => s.id === settingId ? { ...s, enabled: !s.enabled } : s)
-      );
-    } else {
-      setDisplaySettings(settings =>
-        settings.map(s => s.id === settingId ? { ...s, enabled: !s.enabled } : s)
-      );
-    }
-  };
-
   const handleExportData = () => {
     setShowExportConfirm(true);
     setTimeout(() => {
@@ -72,10 +43,9 @@ export function SettingsPanel() {
   };
 
   const handleDownloadData = () => {
-    // Simulate download
     const data = {
       exportDate: new Date().toISOString(),
-      settings: { notificationSettings, displaySettings, dataSettings },
+      settings: { notificationSettings, displaySettings, dataSettings, privacySettings },
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -108,17 +78,31 @@ export function SettingsPanel() {
   ];
 
   const themeColors = [
-    { id: 'indigo', from: '#6366f1', to: '#8b5cf6' },
-    { id: 'blue', from: '#3b82f6', to: '#06b6d4' },
-    { id: 'emerald', from: '#10b981', to: '#14b8a6' },
-    { id: 'purple', from: '#8b5cf6', to: '#ec4899' },
+    { id: 'indigo' as const, from: '#6366f1', to: '#8b5cf6' },
+    { id: 'blue' as const, from: '#3b82f6', to: '#06b6d4' },
+    { id: 'emerald' as const, from: '#10b981', to: '#14b8a6' },
+    { id: 'purple' as const, from: '#8b5cf6', to: '#ec4899' },
+  ];
+
+  const notificationItems = [
+    { id: 'conflicts' as const, label: 'Resource Conflicts', description: 'Alert when resources are over-allocated' },
+    { id: 'milestones' as const, label: 'Milestone Reminders', description: 'Notify before milestone deadlines' },
+    { id: 'approvals' as const, label: 'Approval Requests', description: 'Get notified of pending approvals' },
+    { id: 'updates' as const, label: 'Project Updates', description: 'Status changes and progress updates' },
+  ];
+
+  const displayItems = [
+    { id: 'compactView' as const, label: 'Compact View', description: 'Show more items in less space' },
+    { id: 'showROI' as const, label: 'Show ROI Metrics', description: 'Display financial metrics on cards' },
+    { id: 'showAvailability' as const, label: 'Show Availability', description: 'Display resource availability status' },
+    { id: 'animations' as const, label: 'Animations', description: 'Enable UI animations and transitions' },
   ];
 
   return (
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+        className={`p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg ${displaySettings.animations ? 'transition-colors' : ''}`}
         aria-label="Settings"
       >
         <Settings className="w-5 h-5" />
@@ -147,7 +131,7 @@ export function SettingsPanel() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+                  className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${displaySettings.animations ? 'transition-colors' : ''} ${
                     activeTab === tab.id
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600 hover:bg-gray-100'
@@ -166,27 +150,32 @@ export function SettingsPanel() {
                   <p className="text-sm text-gray-500 mb-4">
                     Configure how you receive alerts and notifications.
                   </p>
-                  {notificationSettings.map((setting) => (
-                    <div key={setting.id} className="flex items-center justify-between">
+                  {notificationItems.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{setting.label}</p>
-                        <p className="text-xs text-gray-500">{setting.description}</p>
+                        <p className="text-sm font-medium text-gray-900">{item.label}</p>
+                        <p className="text-xs text-gray-500">{item.description}</p>
                       </div>
                       <button
-                        onClick={() => toggleSetting(setting.id, 'notification')}
-                        className={`relative w-11 h-6 rounded-full transition-colors ${
-                          setting.enabled ? 'bg-indigo-600' : 'bg-gray-200'
+                        onClick={() => setNotificationSettings({ [item.id]: !notificationSettings[item.id] })}
+                        className={`relative w-11 h-6 rounded-full ${displaySettings.animations ? 'transition-colors' : ''} ${
+                          notificationSettings[item.id] ? 'bg-indigo-600' : 'bg-gray-200'
                         }`}
-                        aria-label={`Toggle ${setting.label}`}
+                        aria-label={`Toggle ${item.label}`}
                       >
                         <span
-                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                            setting.enabled ? 'translate-x-5' : ''
+                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full ${displaySettings.animations ? 'transition-transform' : ''} ${
+                            notificationSettings[item.id] ? 'translate-x-5' : ''
                           }`}
                         />
                       </button>
                     </div>
                   ))}
+                  <div className="mt-4 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                    <p className="text-xs text-indigo-700">
+                      <strong>Active:</strong> {Object.values(notificationSettings).filter(Boolean).length} of {Object.keys(notificationSettings).length} notification types enabled
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -195,22 +184,22 @@ export function SettingsPanel() {
                   <p className="text-sm text-gray-500 mb-4">
                     Customize how information is displayed.
                   </p>
-                  {displaySettings.map((setting) => (
-                    <div key={setting.id} className="flex items-center justify-between">
+                  {displayItems.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{setting.label}</p>
-                        <p className="text-xs text-gray-500">{setting.description}</p>
+                        <p className="text-sm font-medium text-gray-900">{item.label}</p>
+                        <p className="text-xs text-gray-500">{item.description}</p>
                       </div>
                       <button
-                        onClick={() => toggleSetting(setting.id, 'display')}
-                        className={`relative w-11 h-6 rounded-full transition-colors ${
-                          setting.enabled ? 'bg-indigo-600' : 'bg-gray-200'
+                        onClick={() => setDisplaySettings({ [item.id]: !displaySettings[item.id] })}
+                        className={`relative w-11 h-6 rounded-full ${displaySettings.animations ? 'transition-colors' : ''} ${
+                          displaySettings[item.id] ? 'bg-indigo-600' : 'bg-gray-200'
                         }`}
-                        aria-label={`Toggle ${setting.label}`}
+                        aria-label={`Toggle ${item.label}`}
                       >
                         <span
-                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                            setting.enabled ? 'translate-x-5' : ''
+                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full ${displaySettings.animations ? 'transition-transform' : ''} ${
+                            displaySettings[item.id] ? 'translate-x-5' : ''
                           }`}
                         />
                       </button>
@@ -225,21 +214,24 @@ export function SettingsPanel() {
                       {themeColors.map((color) => (
                         <button
                           key={color.id}
-                          onClick={() => setSelectedTheme(color.id)}
-                          className={`relative w-8 h-8 rounded-full border-2 transition-all ${
-                            selectedTheme === color.id ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105'
+                          onClick={() => setDisplaySettings({ colorTheme: color.id })}
+                          className={`relative w-8 h-8 rounded-full border-2 ${displaySettings.animations ? 'transition-all' : ''} ${
+                            displaySettings.colorTheme === color.id ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105'
                           }`}
                           style={{
                             background: `linear-gradient(135deg, ${color.from}, ${color.to})`,
                           }}
                           aria-label={`${color.id} theme`}
                         >
-                          {selectedTheme === color.id && (
+                          {displaySettings.colorTheme === color.id && (
                             <Check className="w-4 h-4 text-white absolute inset-0 m-auto" />
                           )}
                         </button>
                       ))}
                     </div>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Current theme: <span className="font-medium capitalize">{displaySettings.colorTheme}</span>
+                    </p>
                   </div>
                 </div>
               )}
@@ -256,7 +248,7 @@ export function SettingsPanel() {
                     </label>
                     <select
                       value={dataSettings.refreshInterval}
-                      onChange={(e) => setDataSettings({ ...dataSettings, refreshInterval: e.target.value })}
+                      onChange={(e) => setDataSettings({ refreshInterval: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       <option value="1">Every minute</option>
@@ -273,7 +265,7 @@ export function SettingsPanel() {
                     </label>
                     <select
                       value={dataSettings.timezone}
-                      onChange={(e) => setDataSettings({ ...dataSettings, timezone: e.target.value })}
+                      onChange={(e) => setDataSettings({ timezone: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       <option value="America/Los_Angeles">Pacific Time (PT)</option>
@@ -290,7 +282,7 @@ export function SettingsPanel() {
                     </label>
                     <select
                       value={dataSettings.dateFormat}
-                      onChange={(e) => setDataSettings({ ...dataSettings, dateFormat: e.target.value })}
+                      onChange={(e) => setDataSettings({ dateFormat: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -302,7 +294,7 @@ export function SettingsPanel() {
                   <div className="pt-4 border-t border-gray-100">
                     <button
                       onClick={handleExportData}
-                      className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                      className={`w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 ${displaySettings.animations ? 'transition-colors' : ''} flex items-center justify-center gap-2`}
                     >
                       {showExportConfirm ? (
                         <>
@@ -344,15 +336,15 @@ export function SettingsPanel() {
                       <p className="text-xs text-gray-500">Help improve the product with usage data</p>
                     </div>
                     <button
-                      onClick={() => setAnalyticsEnabled(!analyticsEnabled)}
-                      className={`relative w-11 h-6 rounded-full transition-colors ${
-                        analyticsEnabled ? 'bg-indigo-600' : 'bg-gray-200'
+                      onClick={() => setPrivacySettings({ analyticsEnabled: !privacySettings.analyticsEnabled })}
+                      className={`relative w-11 h-6 rounded-full ${displaySettings.animations ? 'transition-colors' : ''} ${
+                        privacySettings.analyticsEnabled ? 'bg-indigo-600' : 'bg-gray-200'
                       }`}
                       aria-label="Toggle analytics"
                     >
                       <span
-                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                          analyticsEnabled ? 'translate-x-5' : ''
+                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full ${displaySettings.animations ? 'transition-transform' : ''} ${
+                          privacySettings.analyticsEnabled ? 'translate-x-5' : ''
                         }`}
                       />
                     </button>
@@ -364,8 +356,8 @@ export function SettingsPanel() {
                       <p className="text-xs text-gray-500">Auto-logout after inactivity</p>
                     </div>
                     <select
-                      value={sessionTimeout}
-                      onChange={(e) => setSessionTimeout(e.target.value)}
+                      value={privacySettings.sessionTimeout}
+                      onChange={(e) => setPrivacySettings({ sessionTimeout: e.target.value })}
                       className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       <option value="30 minutes">30 minutes</option>
@@ -378,7 +370,7 @@ export function SettingsPanel() {
                   <div className="pt-4 border-t border-gray-100 space-y-2">
                     <button
                       onClick={handleDownloadData}
-                      className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                      className={`w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 ${displaySettings.animations ? 'transition-colors' : ''} flex items-center justify-center gap-2`}
                     >
                       <Download className="w-4 h-4" />
                       Download My Data
@@ -405,7 +397,7 @@ export function SettingsPanel() {
                     ) : (
                       <button
                         onClick={handleDeleteAccount}
-                        className="w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+                        className={`w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 ${displaySettings.animations ? 'transition-colors' : ''} flex items-center justify-center gap-2`}
                       >
                         <Trash2 className="w-4 h-4" />
                         Delete Account
@@ -427,7 +419,7 @@ export function SettingsPanel() {
             </button>
             <button
               onClick={() => setIsOpen(false)}
-              className="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+              className={`px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 ${displaySettings.animations ? 'transition-colors' : ''}`}
             >
               Done
             </button>

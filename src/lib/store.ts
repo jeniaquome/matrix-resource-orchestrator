@@ -1,31 +1,129 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { Resource, Project, FunctionalSilo } from '@/types';
 import { mockResources, mockProjects } from '@/data/mockData';
 
+// Settings types
+export interface NotificationSettings {
+  conflicts: boolean;
+  milestones: boolean;
+  approvals: boolean;
+  updates: boolean;
+}
+
+export interface DisplaySettings {
+  compactView: boolean;
+  showROI: boolean;
+  showAvailability: boolean;
+  animations: boolean;
+  colorTheme: 'indigo' | 'blue' | 'emerald' | 'purple';
+}
+
+export interface DataSettings {
+  refreshInterval: string;
+  timezone: string;
+  dateFormat: string;
+}
+
+export interface PrivacySettings {
+  analyticsEnabled: boolean;
+  sessionTimeout: string;
+}
+
 interface AppState {
+  // Data
   resources: Resource[];
   projects: Project[];
   selectedProject: string | null;
   selectedResource: string | null;
   filterSilo: FunctionalSilo | 'all';
 
+  // Settings
+  notificationSettings: NotificationSettings;
+  displaySettings: DisplaySettings;
+  dataSettings: DataSettings;
+  privacySettings: PrivacySettings;
+
   // Actions
   setSelectedProject: (id: string | null) => void;
   setSelectedResource: (id: string | null) => void;
   setFilterSilo: (silo: FunctionalSilo | 'all') => void;
+
+  // Settings Actions
+  setNotificationSettings: (settings: Partial<NotificationSettings>) => void;
+  setDisplaySettings: (settings: Partial<DisplaySettings>) => void;
+  setDataSettings: (settings: Partial<DataSettings>) => void;
+  setPrivacySettings: (settings: Partial<PrivacySettings>) => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-  resources: mockResources,
-  projects: mockProjects,
-  selectedProject: null,
-  selectedResource: null,
-  filterSilo: 'all',
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
+      // Initial data
+      resources: mockResources,
+      projects: mockProjects,
+      selectedProject: null,
+      selectedResource: null,
+      filterSilo: 'all',
 
-  setSelectedProject: (id) => set({ selectedProject: id }),
-  setSelectedResource: (id) => set({ selectedResource: id }),
-  setFilterSilo: (silo) => set({ filterSilo: silo }),
-}));
+      // Initial settings
+      notificationSettings: {
+        conflicts: true,
+        milestones: true,
+        approvals: true,
+        updates: false,
+      },
+      displaySettings: {
+        compactView: false,
+        showROI: true,
+        showAvailability: true,
+        animations: true,
+        colorTheme: 'indigo',
+      },
+      dataSettings: {
+        refreshInterval: '5',
+        timezone: 'America/Los_Angeles',
+        dateFormat: 'MM/DD/YYYY',
+      },
+      privacySettings: {
+        analyticsEnabled: true,
+        sessionTimeout: '30 minutes',
+      },
+
+      // Data actions
+      setSelectedProject: (id) => set({ selectedProject: id }),
+      setSelectedResource: (id) => set({ selectedResource: id }),
+      setFilterSilo: (silo) => set({ filterSilo: silo }),
+
+      // Settings actions
+      setNotificationSettings: (settings) =>
+        set((state) => ({
+          notificationSettings: { ...state.notificationSettings, ...settings },
+        })),
+      setDisplaySettings: (settings) =>
+        set((state) => ({
+          displaySettings: { ...state.displaySettings, ...settings },
+        })),
+      setDataSettings: (settings) =>
+        set((state) => ({
+          dataSettings: { ...state.dataSettings, ...settings },
+        })),
+      setPrivacySettings: (settings) =>
+        set((state) => ({
+          privacySettings: { ...state.privacySettings, ...settings },
+        })),
+    }),
+    {
+      name: 'matrix-orchestrator-settings',
+      partialize: (state) => ({
+        notificationSettings: state.notificationSettings,
+        displaySettings: state.displaySettings,
+        dataSettings: state.dataSettings,
+        privacySettings: state.privacySettings,
+      }),
+    }
+  )
+);
 
 // Helper functions (not hooks - just pure functions)
 export function getMetrics(resources: Resource[], projects: Project[]) {

@@ -2,7 +2,7 @@
 
 import { useAppStore } from '@/lib/store';
 import { siloColors } from '@/data/mockData';
-import { ChevronRight, Calendar, Users } from 'lucide-react';
+import { ChevronRight, Users } from 'lucide-react';
 import { FunctionalSilo } from '@/types';
 
 const statusColors = {
@@ -23,6 +23,7 @@ export function ProjectsTable() {
   const projects = useAppStore(state => state.projects);
   const setSelectedProject = useAppStore(state => state.setSelectedProject);
   const selectedProject = useAppStore(state => state.selectedProject);
+  const displaySettings = useAppStore(state => state.displaySettings);
 
   // Sort by ROI descending
   const sortedProjects = [...projects].sort(
@@ -31,9 +32,11 @@ export function ProjectsTable() {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="p-4 border-b border-gray-100">
+      <div className={`${displaySettings.compactView ? 'p-3' : 'p-4'} border-b border-gray-100`}>
         <h3 className="text-lg font-semibold text-gray-900">Projects by Business Impact</h3>
-        <p className="text-sm text-gray-500">Sorted by risk-adjusted NPV</p>
+        {displaySettings.showROI && (
+          <p className="text-sm text-gray-500">Sorted by risk-adjusted NPV</p>
+        )}
       </div>
 
       <div className="overflow-x-auto">
@@ -43,9 +46,13 @@ export function ProjectsTable() {
               <th className="px-4 py-3 text-left">Project</th>
               <th className="px-4 py-3 text-left">Priority</th>
               <th className="px-4 py-3 text-left">Silos</th>
-              <th className="px-4 py-3 text-right">Est. Value</th>
-              <th className="px-4 py-3 text-right">Probability</th>
-              <th className="px-4 py-3 text-right">Risk-Adj NPV</th>
+              {displaySettings.showROI && (
+                <>
+                  <th className="px-4 py-3 text-right">Est. Value</th>
+                  <th className="px-4 py-3 text-right">Probability</th>
+                  <th className="px-4 py-3 text-right">Risk-Adj NPV</th>
+                </>
+              )}
               <th className="px-4 py-3 text-center">Resources</th>
               <th className="px-4 py-3 text-left">Status</th>
               <th className="px-4 py-3"></th>
@@ -55,55 +62,61 @@ export function ProjectsTable() {
             {sortedProjects.map((project) => (
               <tr
                 key={project.id}
-                className={`hover:bg-gray-50 cursor-pointer transition-colors ${
+                className={`hover:bg-gray-50 cursor-pointer ${displaySettings.animations ? 'transition-colors' : ''} ${
                   selectedProject === project.id ? 'bg-blue-50' : ''
                 }`}
                 onClick={() => setSelectedProject(project.id)}
               >
-                <td className="px-4 py-3">
+                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
                   <div>
                     <p className="font-medium text-gray-900">{project.name}</p>
-                    <p className="text-xs text-gray-500">{project.owner}</p>
+                    {!displaySettings.compactView && (
+                      <p className="text-xs text-gray-500">{project.owner}</p>
+                    )}
                   </div>
                 </td>
-                <td className="px-4 py-3">
+                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
                   <span className={`px-2 py-1 rounded text-xs font-medium ${priorityBadge[project.priority]}`}>
                     {project.priority}
                   </span>
                 </td>
-                <td className="px-4 py-3">
+                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
                   <div className="flex gap-1">
                     {project.requiredSilos.map((silo) => (
                       <div
                         key={silo}
-                        className="w-2 h-6 rounded-sm"
+                        className={`w-2 ${displaySettings.compactView ? 'h-4' : 'h-6'} rounded-sm`}
                         style={{ backgroundColor: siloColors[silo as FunctionalSilo] }}
                         title={silo}
                       />
                     ))}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-right font-medium">
-                  ${project.roi.estimatedValue}M
-                </td>
-                <td className="px-4 py-3 text-right">
-                  {project.roi.probability}%
-                </td>
-                <td className="px-4 py-3 text-right font-semibold text-green-600">
-                  ${project.roi.riskAdjustedNPV.toFixed(1)}M
-                </td>
-                <td className="px-4 py-3 text-center">
+                {displaySettings.showROI && (
+                  <>
+                    <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'} text-right font-medium`}>
+                      ${project.roi.estimatedValue}M
+                    </td>
+                    <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'} text-right`}>
+                      {project.roi.probability}%
+                    </td>
+                    <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'} text-right font-semibold text-green-600`}>
+                      ${project.roi.riskAdjustedNPV.toFixed(1)}M
+                    </td>
+                  </>
+                )}
+                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'} text-center`}>
                   <div className="flex items-center justify-center gap-1 text-gray-500">
                     <Users className="w-4 h-4" />
                     <span>{project.allocatedResources.length}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3">
+                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
                   <span className={`px-2 py-1 rounded text-xs font-medium ${statusColors[project.status]}`}>
                     {project.status}
                   </span>
                 </td>
-                <td className="px-4 py-3">
+                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
                   <ChevronRight className="w-4 h-4 text-gray-400" />
                 </td>
               </tr>

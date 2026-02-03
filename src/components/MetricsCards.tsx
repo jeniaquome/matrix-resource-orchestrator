@@ -14,16 +14,18 @@ import {
 export function MetricsCards() {
   const resources = useAppStore(state => state.resources);
   const projects = useAppStore(state => state.projects);
+  const displaySettings = useAppStore(state => state.displaySettings);
 
   const metrics = useMemo(() => getMetrics(resources, projects), [resources, projects]);
 
-  const cards = [
+  const allCards = [
     {
       title: 'Active Projects',
       value: metrics.activeProjects,
       subtitle: `${metrics.totalProjects} total`,
       icon: FolderKanban,
       color: 'bg-blue-500',
+      showAlways: true,
     },
     {
       title: 'Team Members',
@@ -31,6 +33,7 @@ export function MetricsCards() {
       subtitle: 'Across 5 silos',
       icon: Users,
       color: 'bg-green-500',
+      showAlways: true,
     },
     {
       title: 'Avg Utilization',
@@ -38,6 +41,7 @@ export function MetricsCards() {
       subtitle: 'Resource allocation',
       icon: TrendingUp,
       color: metrics.avgUtilization > 85 ? 'bg-yellow-500' : 'bg-emerald-500',
+      showAlways: true,
     },
     {
       title: 'Total ROI',
@@ -45,6 +49,8 @@ export function MetricsCards() {
       subtitle: 'Risk-adjusted NPV',
       icon: DollarSign,
       color: 'bg-purple-500',
+      showAlways: false, // Only show when showROI is enabled
+      requiresROI: true,
     },
     {
       title: 'Conflicts',
@@ -52,6 +58,7 @@ export function MetricsCards() {
       subtitle: 'Need resolution',
       icon: AlertTriangle,
       color: metrics.conflicts > 0 ? 'bg-red-500' : 'bg-gray-400',
+      showAlways: true,
     },
     {
       title: 'Milestones',
@@ -59,24 +66,37 @@ export function MetricsCards() {
       subtitle: 'Due in 30 days',
       icon: Calendar,
       color: 'bg-orange-500',
+      showAlways: true,
     },
   ];
 
+  // Filter cards based on settings
+  const cards = allCards.filter(card => card.showAlways || (card.requiresROI && displaySettings.showROI));
+
+  // Adjust grid columns based on number of visible cards
+  const gridCols = cards.length <= 4
+    ? 'grid-cols-2 md:grid-cols-4'
+    : cards.length === 5
+    ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5'
+    : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-6';
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div className={`grid ${gridCols} gap-4`}>
       {cards.map((card) => (
         <div
           key={card.title}
-          className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow"
+          className={`bg-white rounded-xl shadow-sm border border-gray-100 ${displaySettings.compactView ? 'p-3' : 'p-4'} hover:shadow-md ${displaySettings.animations ? 'transition-shadow' : ''}`}
         >
-          <div className="flex items-center gap-3">
-            <div className={`${card.color} p-2 rounded-lg`}>
-              <card.icon className="w-5 h-5 text-white" />
+          <div className={`flex items-center ${displaySettings.compactView ? 'gap-2' : 'gap-3'}`}>
+            <div className={`${card.color} ${displaySettings.compactView ? 'p-1.5' : 'p-2'} rounded-lg`}>
+              <card.icon className={`${displaySettings.compactView ? 'w-4 h-4' : 'w-5 h-5'} text-white`} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{card.value}</p>
+              <p className={`${displaySettings.compactView ? 'text-xl' : 'text-2xl'} font-bold text-gray-900`}>{card.value}</p>
               <p className="text-xs text-gray-500">{card.title}</p>
-              <p className="text-xs text-gray-400">{card.subtitle}</p>
+              {!displaySettings.compactView && (
+                <p className="text-xs text-gray-400">{card.subtitle}</p>
+              )}
             </div>
           </div>
         </div>
