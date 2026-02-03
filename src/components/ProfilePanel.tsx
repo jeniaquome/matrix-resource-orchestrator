@@ -12,7 +12,9 @@ import {
   Briefcase,
   Award,
   Clock,
-  Edit2
+  Edit2,
+  X,
+  Save
 } from 'lucide-react';
 
 interface UserProfile {
@@ -48,24 +50,61 @@ const mockProfile: UserProfile = {
 
 export function ProfilePanel() {
   const [isOpen, setIsOpen] = useState(false);
-  const [profile] = useState(mockProfile);
+  const [profile, setProfile] = useState(mockProfile);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedProfile, setEditedProfile] = useState(mockProfile);
+  const [showAllActivity, setShowAllActivity] = useState(false);
+  const [showFullProfile, setShowFullProfile] = useState(false);
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setIsEditing(false);
+        setShowAllActivity(false);
+        setShowFullProfile(false);
+        setShowSignOutConfirm(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleSaveProfile = () => {
+    setProfile({
+      ...editedProfile,
+      initials: editedProfile.name.split(' ').map(n => n[0]).join('').toUpperCase(),
+    });
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditedProfile(profile);
+    setIsEditing(false);
+  };
+
+  const handleSignOut = () => {
+    setShowSignOutConfirm(true);
+  };
+
+  const confirmSignOut = () => {
+    alert('Signed out successfully. In a real app, this would redirect to login.');
+    setShowSignOutConfirm(false);
+    setIsOpen(false);
+  };
+
+  const displayedActivity = showAllActivity
+    ? profile.recentActivity
+    : profile.recentActivity.slice(0, 3);
+
   return (
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white text-sm font-medium hover:ring-2 hover:ring-emerald-200 transition-all"
+        aria-label="Profile menu"
       >
         {profile.initials}
       </button>
@@ -80,13 +119,57 @@ export function ProfilePanel() {
                   {profile.initials}
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold">{profile.name}</h3>
-                  <p className="text-indigo-100 text-sm">{profile.role}</p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editedProfile.name}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, name: e.target.value })}
+                      className="bg-white/20 text-white placeholder-white/60 px-2 py-1 rounded text-lg font-semibold w-full border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    />
+                  ) : (
+                    <h3 className="text-lg font-semibold">{profile.name}</h3>
+                  )}
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editedProfile.role}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, role: e.target.value })}
+                      className="bg-white/20 text-indigo-100 placeholder-white/60 px-2 py-1 rounded text-sm w-full mt-1 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    />
+                  ) : (
+                    <p className="text-indigo-100 text-sm">{profile.role}</p>
+                  )}
                 </div>
               </div>
-              <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
-                <Edit2 className="w-4 h-4" />
-              </button>
+              {isEditing ? (
+                <div className="flex gap-1">
+                  <button
+                    onClick={handleSaveProfile}
+                    className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
+                    aria-label="Save profile"
+                  >
+                    <Save className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
+                    aria-label="Cancel edit"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setEditedProfile(profile);
+                    setIsEditing(true);
+                  }}
+                  className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
+                  aria-label="Edit profile"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -94,15 +177,42 @@ export function ProfilePanel() {
           <div className="p-4 space-y-3">
             <div className="flex items-center gap-3 text-sm">
               <Mail className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-600">{profile.email}</span>
+              {isEditing ? (
+                <input
+                  type="email"
+                  value={editedProfile.email}
+                  onChange={(e) => setEditedProfile({ ...editedProfile, email: e.target.value })}
+                  className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              ) : (
+                <span className="text-gray-600">{profile.email}</span>
+              )}
             </div>
             <div className="flex items-center gap-3 text-sm">
               <Building2 className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-600">{profile.department}</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedProfile.department}
+                  onChange={(e) => setEditedProfile({ ...editedProfile, department: e.target.value })}
+                  className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              ) : (
+                <span className="text-gray-600">{profile.department}</span>
+              )}
             </div>
             <div className="flex items-center gap-3 text-sm">
               <MapPin className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-600">{profile.location}</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedProfile.location}
+                  onChange={(e) => setEditedProfile({ ...editedProfile, location: e.target.value })}
+                  className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              ) : (
+                <span className="text-gray-600">{profile.location}</span>
+              )}
             </div>
             <div className="flex items-center gap-3 text-sm">
               <Calendar className="w-4 h-4 text-gray-400" />
@@ -111,24 +221,26 @@ export function ProfilePanel() {
           </div>
 
           {/* Stats */}
-          <div className="px-4 pb-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-gray-50 rounded-lg p-3">
-                <div className="flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 text-indigo-500" />
-                  <span className="text-xs text-gray-500">Projects Owned</span>
+          {showFullProfile && (
+            <div className="px-4 pb-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-indigo-500" />
+                    <span className="text-xs text-gray-500">Projects Owned</span>
+                  </div>
+                  <p className="text-xl font-bold text-gray-900 mt-1">{profile.projectsOwned}</p>
                 </div>
-                <p className="text-xl font-bold text-gray-900 mt-1">{profile.projectsOwned}</p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <div className="flex items-center gap-2">
-                  <Award className="w-4 h-4 text-emerald-500" />
-                  <span className="text-xs text-gray-500">Teams Managed</span>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-emerald-500" />
+                    <span className="text-xs text-gray-500">Teams Managed</span>
+                  </div>
+                  <p className="text-xl font-bold text-gray-900 mt-1">{profile.teamsManaged}</p>
                 </div>
-                <p className="text-xl font-bold text-gray-900 mt-1">{profile.teamsManaged}</p>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Recent Activity */}
           <div className="border-t border-gray-100">
@@ -137,13 +249,18 @@ export function ProfilePanel() {
                 <Clock className="w-4 h-4 text-gray-400" />
                 <span className="text-sm font-medium text-gray-700">Recent Activity</span>
               </div>
-              <button className="text-xs text-indigo-600 hover:text-indigo-700">View all</button>
+              <button
+                onClick={() => setShowAllActivity(!showAllActivity)}
+                className="text-xs text-indigo-600 hover:text-indigo-700"
+              >
+                {showAllActivity ? 'Show less' : 'View all'}
+              </button>
             </div>
             <div className="px-3 pb-3 space-y-2">
-              {profile.recentActivity.slice(0, 3).map((activity, index) => (
+              {displayedActivity.map((activity, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded-lg"
+                  className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
                 >
                   <span className="text-gray-600 truncate flex-1">{activity.action}</span>
                   <span className="text-gray-400 ml-2 whitespace-nowrap">{activity.time}</span>
@@ -154,19 +271,46 @@ export function ProfilePanel() {
 
           {/* Actions */}
           <div className="border-t border-gray-100 p-2">
-            <button className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-600">
+            <button
+              onClick={() => setShowFullProfile(!showFullProfile)}
+              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-600"
+            >
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4" />
-                <span>View Full Profile</span>
+                <span>{showFullProfile ? 'Hide Stats' : 'View Full Profile'}</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-gray-400" />
+              <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${showFullProfile ? 'rotate-90' : ''}`} />
             </button>
-            <button className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-red-50 transition-colors text-sm text-red-600">
-              <div className="flex items-center gap-2">
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
+
+            {showSignOutConfirm ? (
+              <div className="p-2 bg-red-50 rounded-lg border border-red-200 mt-1">
+                <p className="text-sm text-red-700 mb-2">Sign out of your account?</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={confirmSignOut}
+                    className="flex-1 px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                  <button
+                    onClick={() => setShowSignOutConfirm(false)}
+                    className="flex-1 px-3 py-1.5 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
-            </button>
+            ) : (
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-red-50 transition-colors text-sm text-red-600"
+              >
+                <div className="flex items-center gap-2">
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </div>
+              </button>
+            )}
           </div>
         </div>
       )}

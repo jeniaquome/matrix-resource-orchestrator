@@ -10,6 +10,7 @@ interface Alert {
   description: string;
   time: string;
   read: boolean;
+  link?: string;
 }
 
 const mockAlerts: Alert[] = [
@@ -20,6 +21,7 @@ const mockAlerts: Alert[] = [
     description: 'Lisa Thompson is allocated 52h/week across 3 projects. Review recommended.',
     time: '10 min ago',
     read: false,
+    link: 'conflicts',
   },
   {
     id: 'a2',
@@ -28,6 +30,7 @@ const mockAlerts: Alert[] = [
     description: 'ELN Integration: Pilot Deployment due in 5 days',
     time: '1 hour ago',
     read: false,
+    link: 'projects',
   },
   {
     id: 'a3',
@@ -36,6 +39,7 @@ const mockAlerts: Alert[] = [
     description: 'Dr. Maria Santos requested additional CompSci support for HTS Platform',
     time: '2 hours ago',
     read: false,
+    link: 'resources',
   },
   {
     id: 'a4',
@@ -44,6 +48,7 @@ const mockAlerts: Alert[] = [
     description: 'Dr. Priya Sharma now at 120% capacity. Prioritization needed.',
     time: '3 hours ago',
     read: true,
+    link: 'conflicts',
   },
   {
     id: 'a5',
@@ -52,6 +57,7 @@ const mockAlerts: Alert[] = [
     description: 'Research Data Lake moved to "On Track" status',
     time: '5 hours ago',
     read: true,
+    link: 'projects',
   },
   {
     id: 'a6',
@@ -60,6 +66,7 @@ const mockAlerts: Alert[] = [
     description: 'HTS Platform: Automation Integration completed successfully',
     time: '1 day ago',
     read: true,
+    link: 'projects',
   },
 ];
 
@@ -77,9 +84,14 @@ const alertColors = {
   update: 'text-green-500 bg-green-50',
 };
 
-export function AlertsPanel() {
+interface AlertsPanelProps {
+  onNavigate?: (section: string) => void;
+}
+
+export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [alerts, setAlerts] = useState(mockAlerts);
+  const [showAllNotifications, setShowAllNotifications] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = alerts.filter(a => !a.read).length;
@@ -88,6 +100,7 @@ export function AlertsPanel() {
     function handleClickOutside(event: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setShowAllNotifications(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -106,11 +119,22 @@ export function AlertsPanel() {
     setAlerts(alerts.filter(a => a.id !== id));
   };
 
+  const handleAlertClick = (alert: Alert) => {
+    markAsRead(alert.id);
+    if (alert.link && onNavigate) {
+      onNavigate(alert.link);
+      setIsOpen(false);
+    }
+  };
+
+  const displayedAlerts = showAllNotifications ? alerts : alerts.slice(0, 5);
+
   return (
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+        aria-label="Notifications"
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
@@ -142,7 +166,7 @@ export function AlertsPanel() {
                 <p>No notifications</p>
               </div>
             ) : (
-              alerts.map((alert) => {
+              displayedAlerts.map((alert) => {
                 const Icon = alertIcons[alert.type];
                 return (
                   <div
@@ -150,7 +174,7 @@ export function AlertsPanel() {
                     className={`p-4 border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors ${
                       !alert.read ? 'bg-indigo-50/30' : ''
                     }`}
-                    onClick={() => markAsRead(alert.id)}
+                    onClick={() => handleAlertClick(alert)}
                   >
                     <div className="flex gap-3">
                       <div className={`p-2 rounded-lg ${alertColors[alert.type]}`}>
@@ -167,6 +191,7 @@ export function AlertsPanel() {
                               dismissAlert(alert.id);
                             }}
                             className="text-gray-400 hover:text-gray-600"
+                            aria-label="Dismiss notification"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -185,8 +210,13 @@ export function AlertsPanel() {
           </div>
 
           <div className="p-3 border-t border-gray-100 bg-gray-50">
-            <button className="w-full text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-              View all notifications
+            <button
+              onClick={() => setShowAllNotifications(!showAllNotifications)}
+              className="w-full text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              {showAllNotifications
+                ? `Show less`
+                : `View all notifications (${alerts.length})`}
             </button>
           </div>
         </div>

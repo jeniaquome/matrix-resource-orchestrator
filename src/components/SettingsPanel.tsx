@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Settings, X, Bell, Eye, Palette, Database, Shield, HelpCircle } from 'lucide-react';
+import { Settings, X, Bell, Eye, Database, Shield, HelpCircle, Check, Download, Trash2 } from 'lucide-react';
 
 interface SettingToggle {
   id: string;
@@ -13,6 +13,11 @@ interface SettingToggle {
 export function SettingsPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('notifications');
+  const [selectedTheme, setSelectedTheme] = useState('indigo');
+  const [showExportConfirm, setShowExportConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
+  const [sessionTimeout, setSessionTimeout] = useState('30 minutes');
   const panelRef = useRef<HTMLDivElement>(null);
 
   const [notificationSettings, setNotificationSettings] = useState<SettingToggle[]>([
@@ -39,6 +44,8 @@ export function SettingsPanel() {
     function handleClickOutside(event: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setShowExportConfirm(false);
+        setShowDeleteConfirm(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -57,6 +64,42 @@ export function SettingsPanel() {
     }
   };
 
+  const handleExportData = () => {
+    setShowExportConfirm(true);
+    setTimeout(() => {
+      setShowExportConfirm(false);
+    }, 2000);
+  };
+
+  const handleDownloadData = () => {
+    // Simulate download
+    const data = {
+      exportDate: new Date().toISOString(),
+      settings: { notificationSettings, displaySettings, dataSettings },
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'matrix-orchestrator-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDeleteAccount = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    alert('Account deletion requested. In a real app, this would initiate the deletion process.');
+    setShowDeleteConfirm(false);
+    setIsOpen(false);
+  };
+
+  const openHelp = () => {
+    window.open('https://github.com/jeniaquome/matrix-resource-orchestrator', '_blank');
+  };
+
   const tabs = [
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'display', label: 'Display', icon: Eye },
@@ -64,11 +107,19 @@ export function SettingsPanel() {
     { id: 'privacy', label: 'Privacy', icon: Shield },
   ];
 
+  const themeColors = [
+    { id: 'indigo', from: '#6366f1', to: '#8b5cf6' },
+    { id: 'blue', from: '#3b82f6', to: '#06b6d4' },
+    { id: 'emerald', from: '#10b981', to: '#14b8a6' },
+    { id: 'purple', from: '#8b5cf6', to: '#ec4899' },
+  ];
+
   return (
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+        aria-label="Settings"
       >
         <Settings className="w-5 h-5" />
       </button>
@@ -83,6 +134,7 @@ export function SettingsPanel() {
             <button
               onClick={() => setIsOpen(false)}
               className="p-1 text-gray-400 hover:text-gray-600 rounded"
+              aria-label="Close settings"
             >
               <X className="w-5 h-5" />
             </button>
@@ -125,6 +177,7 @@ export function SettingsPanel() {
                         className={`relative w-11 h-6 rounded-full transition-colors ${
                           setting.enabled ? 'bg-indigo-600' : 'bg-gray-200'
                         }`}
+                        aria-label={`Toggle ${setting.label}`}
                       >
                         <span
                           className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
@@ -153,6 +206,7 @@ export function SettingsPanel() {
                         className={`relative w-11 h-6 rounded-full transition-colors ${
                           setting.enabled ? 'bg-indigo-600' : 'bg-gray-200'
                         }`}
+                        aria-label={`Toggle ${setting.label}`}
                       >
                         <span
                           className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
@@ -168,28 +222,22 @@ export function SettingsPanel() {
                       Color Theme
                     </label>
                     <div className="flex gap-2">
-                      {['indigo', 'blue', 'emerald', 'purple'].map((color) => (
+                      {themeColors.map((color) => (
                         <button
-                          key={color}
-                          className={`w-8 h-8 rounded-full border-2 ${
-                            color === 'indigo' ? 'border-gray-900' : 'border-transparent'
+                          key={color.id}
+                          onClick={() => setSelectedTheme(color.id)}
+                          className={`relative w-8 h-8 rounded-full border-2 transition-all ${
+                            selectedTheme === color.id ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105'
                           }`}
                           style={{
-                            background: `linear-gradient(135deg, var(--tw-gradient-stops))`,
-                            ['--tw-gradient-from' as string]: {
-                              indigo: '#6366f1',
-                              blue: '#3b82f6',
-                              emerald: '#10b981',
-                              purple: '#8b5cf6',
-                            }[color],
-                            ['--tw-gradient-to' as string]: {
-                              indigo: '#8b5cf6',
-                              blue: '#06b6d4',
-                              emerald: '#14b8a6',
-                              purple: '#ec4899',
-                            }[color],
+                            background: `linear-gradient(135deg, ${color.from}, ${color.to})`,
                           }}
-                        />
+                          aria-label={`${color.id} theme`}
+                        >
+                          {selectedTheme === color.id && (
+                            <Check className="w-4 h-4 text-white absolute inset-0 m-auto" />
+                          )}
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -252,8 +300,21 @@ export function SettingsPanel() {
                   </div>
 
                   <div className="pt-4 border-t border-gray-100">
-                    <button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
-                      Export Data
+                    <button
+                      onClick={handleExportData}
+                      className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                    >
+                      {showExportConfirm ? (
+                        <>
+                          <Check className="w-4 h-4 text-green-500" />
+                          Export Started!
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4" />
+                          Export Data
+                        </>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -282,8 +343,18 @@ export function SettingsPanel() {
                       <p className="text-sm font-medium text-gray-900">Analytics</p>
                       <p className="text-xs text-gray-500">Help improve the product with usage data</p>
                     </div>
-                    <button className="relative w-11 h-6 rounded-full bg-indigo-600 transition-colors">
-                      <span className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full translate-x-5 transition-transform" />
+                    <button
+                      onClick={() => setAnalyticsEnabled(!analyticsEnabled)}
+                      className={`relative w-11 h-6 rounded-full transition-colors ${
+                        analyticsEnabled ? 'bg-indigo-600' : 'bg-gray-200'
+                      }`}
+                      aria-label="Toggle analytics"
+                    >
+                      <span
+                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                          analyticsEnabled ? 'translate-x-5' : ''
+                        }`}
+                      />
                     </button>
                   </div>
 
@@ -292,21 +363,54 @@ export function SettingsPanel() {
                       <p className="text-sm font-medium text-gray-900">Session Timeout</p>
                       <p className="text-xs text-gray-500">Auto-logout after inactivity</p>
                     </div>
-                    <select className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                      <option>30 minutes</option>
-                      <option>1 hour</option>
-                      <option>4 hours</option>
-                      <option>Never</option>
+                    <select
+                      value={sessionTimeout}
+                      onChange={(e) => setSessionTimeout(e.target.value)}
+                      className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="30 minutes">30 minutes</option>
+                      <option value="1 hour">1 hour</option>
+                      <option value="4 hours">4 hours</option>
+                      <option value="Never">Never</option>
                     </select>
                   </div>
 
                   <div className="pt-4 border-t border-gray-100 space-y-2">
-                    <button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                    <button
+                      onClick={handleDownloadData}
+                      className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Download className="w-4 h-4" />
                       Download My Data
                     </button>
-                    <button className="w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors">
-                      Delete Account
-                    </button>
+
+                    {showDeleteConfirm ? (
+                      <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                        <p className="text-sm text-red-700 mb-2">Are you sure? This cannot be undone.</p>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={confirmDelete}
+                            className="flex-1 px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+                          >
+                            Yes, Delete
+                          </button>
+                          <button
+                            onClick={() => setShowDeleteConfirm(false)}
+                            className="flex-1 px-3 py-1.5 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleDeleteAccount}
+                        className="w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete Account
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -314,7 +418,10 @@ export function SettingsPanel() {
           </div>
 
           <div className="p-3 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
-            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
+            <button
+              onClick={openHelp}
+              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+            >
               <HelpCircle className="w-4 h-4" />
               Help
             </button>
