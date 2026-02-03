@@ -5,17 +5,17 @@ import { siloColors } from '@/data/mockData';
 import { FunctionalSilo } from '@/types';
 
 const availabilityColors = {
-  available: 'bg-green-100 border-green-300',
-  'partially-available': 'bg-yellow-100 border-yellow-300',
-  unavailable: 'bg-red-100 border-red-300',
-  'on-leave': 'bg-slate-100 border-gray-300',
+  available: 'bg-white border-slate-200',
+  'partially-available': 'bg-white border-slate-200',
+  unavailable: 'bg-white border-slate-200',
+  'on-leave': 'bg-white border-slate-200',
 };
 
 const availabilityDot = {
-  available: 'bg-green-500',
-  'partially-available': 'bg-yellow-500',
-  unavailable: 'bg-red-500',
-  'on-leave': 'bg-gray-400',
+  available: 'bg-emerald-500',
+  'partially-available': 'bg-amber-500',
+  unavailable: 'bg-slate-300',
+  'on-leave': 'bg-slate-300',
 };
 
 export function ResourceMatrix() {

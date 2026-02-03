@@ -5,6 +5,7 @@ import { MetricsCards } from '@/components/MetricsCards';
 import { SiloUtilization } from '@/components/SiloUtilization';
 import { ProjectROIChart } from '@/components/ProjectROIChart';
 import { ConflictPanel } from '@/components/ConflictPanel';
+import { MilestonesTimeline } from '@/components/MilestonesTimeline';
 import { ProjectsTable } from '@/components/ProjectsTable';
 import { ResourceMatrix } from '@/components/ResourceMatrix';
 import { ProjectDetail } from '@/components/ProjectDetail';
@@ -25,8 +26,11 @@ export default function Home() {
             <ProjectROIChart />
           </div>
 
-          {/* Conflicts */}
-          <ConflictPanel />
+          {/* Conflicts and Milestones */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            <ConflictPanel />
+            <MilestonesTimeline />
+          </div>
 
           {/* Projects Table */}
           <ProjectsTable />
