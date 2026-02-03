@@ -6,17 +6,17 @@ import { ChevronRight, Users } from 'lucide-react';
 import { FunctionalSilo } from '@/types';
 
 const statusColors = {
-  active: 'bg-green-100 text-green-700',
-  planned: 'bg-blue-100 text-blue-700',
-  'on-hold': 'bg-yellow-100 text-yellow-700',
-  completed: 'bg-gray-100 text-gray-700',
+  active: 'bg-teal-50 text-teal-700 border border-teal-200',
+  planned: 'bg-slate-100 text-slate-700 border border-slate-200',
+  'on-hold': 'bg-amber-50 text-amber-700 border border-amber-200',
+  completed: 'bg-slate-100 text-slate-500 border border-slate-200',
 };
 
 const priorityBadge = {
-  critical: 'bg-red-500 text-white',
-  high: 'bg-orange-500 text-white',
-  medium: 'bg-blue-500 text-white',
-  low: 'bg-gray-400 text-white',
+  critical: 'bg-red-100 text-red-700 border border-red-200',
+  high: 'bg-orange-50 text-orange-700 border border-orange-200',
+  medium: 'bg-slate-100 text-slate-700 border border-slate-200',
+  low: 'bg-slate-50 text-slate-500 border border-slate-200',
 };
 
 export function ProjectsTable() {

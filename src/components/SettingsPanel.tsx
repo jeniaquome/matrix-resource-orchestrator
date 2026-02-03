@@ -111,14 +111,14 @@ export function SettingsPanel() {
 
       {isOpen && (
         <div className="fixed inset-4 sm:inset-auto sm:absolute sm:right-0 sm:mt-2 sm:w-[480px] bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[600px]">
-          <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-teal-600 to-teal-700 text-white">
+          <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
             <div className="flex items-center gap-2">
-              <Settings className="w-5 h-5" />
-              <h3 className="font-semibold">Settings</h3>
+              <Settings className="w-5 h-5 text-teal-700" />
+              <h3 className="font-semibold text-slate-900">Settings</h3>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1 text-white/80 hover:text-white hover:bg-white/10 rounded"
+              className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded"
               aria-label="Close settings"
             >
               <X className="w-5 h-5" />

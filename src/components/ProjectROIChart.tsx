@@ -13,10 +13,10 @@ import {
 } from 'recharts';
 
 const priorityColors = {
-  critical: '#EF4444',
-  high: '#F59E0B',
-  medium: '#3B82F6',
-  low: '#6B7280',
+  critical: '#DC2626',
+  high: '#0F766E',
+  medium: '#0D9488',
+  low: '#64748B',
 };
 
 export function ProjectROIChart() {

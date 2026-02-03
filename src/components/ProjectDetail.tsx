@@ -76,7 +76,7 @@ export function ProjectDetail() {
         </div>
 
         {/* ROI Metrics */}
-        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-3 sm:p-4">
+        <div className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200">
           <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
             <TrendingUp className="w-4 h-4 text-teal-600" />
             ROI Metrics

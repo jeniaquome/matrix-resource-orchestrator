@@ -103,7 +103,7 @@ export function ProfilePanel() {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-full flex items-center justify-center text-white text-sm font-medium hover:ring-2 hover:ring-teal-200 transition-all"
+        className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm font-medium hover:bg-teal-700 transition-colors"
         aria-label="Profile menu"
       >
         {profile.initials}
@@ -111,8 +111,8 @@ export function ProfilePanel() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-80 max-w-[320px] bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden">
-          {/* Profile Header - Brand gradient */}
-          <div className="bg-gradient-to-br from-teal-600 to-teal-800 p-6 text-white">
+          {/* Profile Header */}
+          <div className="bg-teal-700 p-6 text-white">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold backdrop-blur-sm">

@@ -24,7 +24,8 @@ export function MetricsCards() {
       value: metrics.activeProjects,
       subtitle: `${metrics.totalProjects} total`,
       icon: FolderKanban,
-      color: 'bg-teal-600',
+      color: 'bg-slate-100',
+      iconColor: 'text-teal-700',
       showAlways: true,
     },
     {
@@ -32,7 +33,8 @@ export function MetricsCards() {
       value: metrics.totalResources,
       subtitle: 'Across 5 silos',
       icon: Users,
-      color: 'bg-sky-600',
+      color: 'bg-slate-100',
+      iconColor: 'text-teal-700',
       showAlways: true,
     },
     {
@@ -40,7 +42,8 @@ export function MetricsCards() {
       value: `${metrics.avgUtilization}%`,
       subtitle: 'Resource allocation',
       icon: TrendingUp,
-      color: metrics.avgUtilization > 85 ? 'bg-amber-500' : 'bg-emerald-600',
+      color: metrics.avgUtilization > 85 ? 'bg-amber-50' : 'bg-slate-100',
+      iconColor: metrics.avgUtilization > 85 ? 'text-amber-700' : 'text-teal-700',
       showAlways: true,
     },
     {
@@ -48,7 +51,8 @@ export function MetricsCards() {
       value: `$${metrics.totalROI.toFixed(1)}M`,
       subtitle: 'Risk-adjusted NPV',
       icon: DollarSign,
-      color: 'bg-violet-600',
+      color: 'bg-slate-100',
+      iconColor: 'text-teal-700',
       showAlways: false,
       requiresROI: true,
     },
@@ -57,7 +61,8 @@ export function MetricsCards() {
       value: metrics.conflicts,
       subtitle: 'Need resolution',
       icon: AlertTriangle,
-      color: metrics.conflicts > 0 ? 'bg-red-500' : 'bg-slate-400',
+      color: metrics.conflicts > 0 ? 'bg-red-50' : 'bg-slate-100',
+      iconColor: metrics.conflicts > 0 ? 'text-red-600' : 'text-slate-400',
       showAlways: true,
     },
     {
@@ -65,7 +70,8 @@ export function MetricsCards() {
       value: metrics.upcomingMilestones,
       subtitle: 'Due in 30 days',
       icon: Calendar,
-      color: 'bg-orange-500',
+      color: 'bg-slate-100',
+      iconColor: 'text-teal-700',
       showAlways: true,
     },
   ];
@@ -83,11 +89,11 @@ export function MetricsCards() {
       {cards.map((card) => (
         <div
           key={card.title}
-          className={`bg-white rounded-xl shadow-sm border border-slate-100 ${displaySettings.compactView ? 'p-2 sm:p-3' : 'p-3 sm:p-4'} hover:shadow-md ${displaySettings.animations ? 'transition-all' : ''}`}
+          className={`bg-white rounded-lg shadow-sm border border-slate-200 ${displaySettings.compactView ? 'p-2 sm:p-3' : 'p-3 sm:p-4'} hover:shadow-md ${displaySettings.animations ? 'transition-all' : ''}`}
         >
           <div className={`flex items-center ${displaySettings.compactView ? 'gap-2' : 'gap-2 sm:gap-3'}`}>
-            <div className={`${card.color} ${displaySettings.compactView ? 'p-1 sm:p-1.5' : 'p-1.5 sm:p-2'} rounded-lg flex-shrink-0`}>
-              <card.icon className={`${displaySettings.compactView ? 'w-3.5 h-3.5 sm:w-4 sm:h-4' : 'w-4 h-4 sm:w-5 sm:h-5'} text-white`} />
+            <div className={`${card.color} ${displaySettings.compactView ? 'p-1.5 sm:p-2' : 'p-2 sm:p-2.5'} rounded-lg flex-shrink-0`}>
+              <card.icon className={`${displaySettings.compactView ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-5 h-5 sm:w-6 sm:h-6'} ${card.iconColor}`} />
             </div>
             <div className="min-w-0">
               <p className={`${displaySettings.compactView ? 'text-lg sm:text-xl' : 'text-xl sm:text-2xl'} font-bold text-slate-900`}>{card.value}</p>

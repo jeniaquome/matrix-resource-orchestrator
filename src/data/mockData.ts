@@ -295,11 +295,11 @@ export const mockProjects: Project[] = [
   },
 ];
 
-// Brand-aligned silo colors
+// Subtle, professional silo colors - variations of teal/slate for cohesion
 export const siloColors: Record<FunctionalSilo, string> = {
-  Biology: '#059669',      // Emerald - life sciences
-  Automation: '#D97706',   // Amber - mechanical/engineering
-  CompSci: '#0284C7',      // Sky blue - technology
-  Chemistry: '#7C3AED',    // Violet - chemistry/molecular
-  DataScience: '#DB2777',  // Pink - analytics/data
+  Biology: '#0D9488',      // Teal
+  Automation: '#0F766E',   // Deep teal
+  CompSci: '#115E59',      // Darker teal
+  Chemistry: '#0E7490',    // Cyan-teal
+  DataScience: '#0891B2',  // Light cyan-teal
 };

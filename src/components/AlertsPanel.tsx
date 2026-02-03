@@ -79,10 +79,10 @@ const alertIcons = {
 };
 
 const alertColors = {
-  conflict: 'text-red-600 bg-red-50',
-  milestone: 'text-amber-600 bg-amber-50',
-  approval: 'text-sky-600 bg-sky-50',
-  update: 'text-emerald-600 bg-emerald-50',
+  conflict: 'text-red-700 bg-red-50 border border-red-100',
+  milestone: 'text-slate-700 bg-slate-100 border border-slate-200',
+  approval: 'text-teal-700 bg-teal-50 border border-teal-100',
+  update: 'text-slate-600 bg-slate-50 border border-slate-200',
 };
 
 // Map alert types to notification setting keys
