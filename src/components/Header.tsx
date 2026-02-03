@@ -1,6 +1,9 @@
 'use client';
 
-import { LayoutGrid, Bell, Search, Settings } from 'lucide-react';
+import { LayoutGrid, Search } from 'lucide-react';
+import { AlertsPanel } from './AlertsPanel';
+import { SettingsPanel } from './SettingsPanel';
+import { ProfilePanel } from './ProfilePanel';
 
 export function Header() {
   return (
@@ -32,16 +35,9 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <button className="relative p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-            </button>
-            <button className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
-              <Settings className="w-5 h-5" />
-            </button>
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
-              AJ
-            </div>
+            <AlertsPanel />
+            <SettingsPanel />
+            <ProfilePanel />
           </div>
         </div>
       </div>
