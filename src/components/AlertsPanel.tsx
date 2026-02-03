@@ -167,7 +167,7 @@ export function AlertsPanel({ onNavigate }: AlertsPanelProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-[400px] bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
           <div className="p-4 border-b border-gray-100 flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-gray-900">Notifications</h3>

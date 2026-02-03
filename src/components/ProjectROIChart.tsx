@@ -37,36 +37,39 @@ export function ProjectROIChart() {
     }));
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Project ROI Landscape</h3>
-        <div className="flex items-center gap-4 text-xs">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Project ROI Landscape</h3>
+        <div className="flex items-center gap-2 sm:gap-4 text-xs flex-wrap">
           {Object.entries(priorityColors).map(([priority, color]) => (
             <div key={priority} className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full" style={{ backgroundColor: color }} />
               <span className="capitalize">{priority}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="h-72">
+      <div className="h-56 sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+          <ScatterChart margin={{ top: 10, right: 10, bottom: 30, left: 10 }}>
             <XAxis
               type="number"
               dataKey="x"
               name="Probability"
               domain={[0, 100]}
               tickFormatter={(v) => `${v}%`}
-              label={{ value: 'Success Probability', position: 'bottom', offset: 0 }}
+              fontSize={11}
+              label={{ value: 'Success Probability', position: 'bottom', offset: 10, fontSize: 11 }}
             />
             <YAxis
               type="number"
               dataKey="y"
               name="Value"
               tickFormatter={(v) => `$${v}M`}
-              label={{ value: 'Est. Value ($M)', angle: -90, position: 'insideLeft' }}
+              fontSize={11}
+              width={45}
+              label={{ value: 'Value ($M)', angle: -90, position: 'insideLeft', fontSize: 11 }}
             />
             <ZAxis type="number" dataKey="z" range={[100, 500]} />
             <Tooltip

@@ -110,7 +110,7 @@ export function ProfilePanel() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-80 max-w-[320px] bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
           {/* Profile Header */}
           <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 text-white">
             <div className="flex items-start justify-between">

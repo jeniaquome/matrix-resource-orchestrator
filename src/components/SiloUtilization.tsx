@@ -21,13 +21,13 @@ export function SiloUtilization() {
   }));
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Silo Utilization</h3>
-      <div className="h-64">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Silo Utilization</h3>
+      <div className="h-48 sm:h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} layout="vertical">
-            <XAxis type="number" domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
-            <YAxis dataKey="name" type="category" width={100} />
+          <BarChart data={chartData} layout="vertical" margin={{ left: -20, right: 10 }}>
+            <XAxis type="number" domain={[0, 100]} tickFormatter={(v) => `${v}%`} fontSize={12} />
+            <YAxis dataKey="name" type="category" width={80} fontSize={11} tickLine={false} />
             <Tooltip
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
@@ -54,15 +54,15 @@ export function SiloUtilization() {
         </ResponsiveContainer>
       </div>
 
-      <div className="mt-4 grid grid-cols-5 gap-2">
+      <div className="mt-4 grid grid-cols-3 sm:grid-cols-5 gap-2">
         {summaries.map(s => (
           <div key={s.silo} className="text-center">
             <div
               className="w-3 h-3 rounded-full mx-auto mb-1"
               style={{ backgroundColor: siloColors[s.silo] }}
             />
-            <p className="text-xs text-gray-600">{s.silo}</p>
-            <p className="text-xs text-gray-400">{s.availableResources}/{s.totalResources} avail</p>
+            <p className="text-xs text-gray-600 truncate">{s.silo}</p>
+            <p className="text-xs text-gray-400">{s.availableResources}/{s.totalResources}</p>
           </div>
         ))}
       </div>

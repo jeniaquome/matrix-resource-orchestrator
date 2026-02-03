@@ -14,13 +14,13 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-6">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="space-y-4 sm:space-y-6">
           {/* Metrics Overview */}
           <MetricsCards />
 
           {/* Charts Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <SiloUtilization />
             <ProjectROIChart />
           </div>

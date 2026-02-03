@@ -109,7 +109,7 @@ export function SettingsPanel() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[480px] bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+        <div className="fixed inset-4 sm:inset-auto sm:absolute sm:right-0 sm:mt-2 sm:w-[480px] bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[600px]">
           <div className="p-4 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Settings className="w-5 h-5 text-gray-500" />

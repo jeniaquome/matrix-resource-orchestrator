@@ -33,19 +33,19 @@ export function ResourceMatrix() {
 
   // Adjust grid based on compact view
   const gridClass = displaySettings.compactView
-    ? 'grid-cols-3 md:grid-cols-4 lg:grid-cols-6'
-    : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+    ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6'
+    : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Resource Availability Matrix</h3>
-        <div className="flex gap-1">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Resource Availability Matrix</h3>
+        <div className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1">
           {silos.map((silo) => (
             <button
               key={silo}
               onClick={() => setFilterSilo(silo)}
-              className={`px-3 py-1 rounded-full text-xs font-medium ${displaySettings.animations ? 'transition-colors' : ''} ${
+              className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${displaySettings.animations ? 'transition-colors' : ''} ${
                 filterSilo === silo
                   ? 'bg-gray-900 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -140,7 +140,7 @@ export function ResourceMatrix() {
       </div>
 
       {displaySettings.showAvailability && (
-        <div className="mt-4 flex items-center gap-4 text-xs text-gray-500">
+        <div className="mt-4 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-gray-500">
           <div className="flex items-center gap-1">
             <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
             <span>Available</span>

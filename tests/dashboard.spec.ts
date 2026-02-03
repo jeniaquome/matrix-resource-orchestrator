@@ -38,10 +38,10 @@ test.describe('Matrix Resource Orchestrator Dashboard', () => {
 
   test('should display projects table', async ({ page }) => {
     await expect(page.getByText('Projects by Business Impact')).toBeVisible({ timeout: 10000 });
-    // Verify project names
-    await expect(page.getByText('Next-Gen ELN Integration')).toBeVisible();
-    await expect(page.getByText('High-Throughput Screening Platform')).toBeVisible();
-    await expect(page.getByText('Research Data Lake')).toBeVisible();
+    // Verify project names (use first() to avoid multiple matches)
+    await expect(page.getByText('Next-Gen ELN Integration').first()).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('High-Throughput Screening Platform').first()).toBeVisible();
+    await expect(page.getByText('Research Data Lake').first()).toBeVisible();
   });
 
   test('should display resource matrix', async ({ page }) => {
@@ -77,8 +77,8 @@ test.describe('Matrix Resource Orchestrator Dashboard', () => {
 
     // Should see project detail panel
     await expect(page.getByText('ROI Metrics')).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText('Required Functional Silos')).toBeVisible();
-    await expect(page.getByText('Allocated Team')).toBeVisible();
+    await expect(page.getByText('Required Silos')).toBeVisible();
+    await expect(page.getByText(/Team \(\d+\)/)).toBeVisible();
   });
 
   test('should show conflict panel', async ({ page }) => {

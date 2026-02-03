@@ -75,27 +75,27 @@ export function MetricsCards() {
 
   // Adjust grid columns based on number of visible cards
   const gridCols = cards.length <= 4
-    ? 'grid-cols-2 md:grid-cols-4'
+    ? 'grid-cols-2 sm:grid-cols-2 md:grid-cols-4'
     : cards.length === 5
-    ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5'
-    : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-6';
+    ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
+    : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6';
 
   return (
-    <div className={`grid ${gridCols} gap-4`}>
+    <div className={`grid ${gridCols} gap-2 sm:gap-4`}>
       {cards.map((card) => (
         <div
           key={card.title}
-          className={`bg-white rounded-xl shadow-sm border border-gray-100 ${displaySettings.compactView ? 'p-3' : 'p-4'} hover:shadow-md ${displaySettings.animations ? 'transition-shadow' : ''}`}
+          className={`bg-white rounded-xl shadow-sm border border-gray-100 ${displaySettings.compactView ? 'p-2 sm:p-3' : 'p-3 sm:p-4'} hover:shadow-md ${displaySettings.animations ? 'transition-shadow' : ''}`}
         >
-          <div className={`flex items-center ${displaySettings.compactView ? 'gap-2' : 'gap-3'}`}>
-            <div className={`${card.color} ${displaySettings.compactView ? 'p-1.5' : 'p-2'} rounded-lg`}>
-              <card.icon className={`${displaySettings.compactView ? 'w-4 h-4' : 'w-5 h-5'} text-white`} />
+          <div className={`flex items-center ${displaySettings.compactView ? 'gap-2' : 'gap-2 sm:gap-3'}`}>
+            <div className={`${card.color} ${displaySettings.compactView ? 'p-1 sm:p-1.5' : 'p-1.5 sm:p-2'} rounded-lg flex-shrink-0`}>
+              <card.icon className={`${displaySettings.compactView ? 'w-3.5 h-3.5 sm:w-4 sm:h-4' : 'w-4 h-4 sm:w-5 sm:h-5'} text-white`} />
             </div>
-            <div>
-              <p className={`${displaySettings.compactView ? 'text-xl' : 'text-2xl'} font-bold text-gray-900`}>{card.value}</p>
-              <p className="text-xs text-gray-500">{card.title}</p>
+            <div className="min-w-0">
+              <p className={`${displaySettings.compactView ? 'text-lg sm:text-xl' : 'text-xl sm:text-2xl'} font-bold text-gray-900`}>{card.value}</p>
+              <p className="text-xs text-gray-500 truncate">{card.title}</p>
               {!displaySettings.compactView && (
-                <p className="text-xs text-gray-400">{card.subtitle}</p>
+                <p className="text-xs text-gray-400 hidden sm:block">{card.subtitle}</p>
               )}
             </div>
           </div>

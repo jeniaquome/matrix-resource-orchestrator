@@ -13,9 +13,9 @@ export function ConflictPanel() {
 
   if (conflicts.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Resource Conflicts</h3>
-        <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Resource Conflicts</h3>
+        <div className="flex flex-col items-center justify-center py-6 sm:py-8 text-gray-400">
           <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-3">
             <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -29,22 +29,22 @@ export function ConflictPanel() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
-        <AlertTriangle className="w-5 h-5 text-red-500" />
-        <h3 className="text-lg font-semibold text-gray-900">Resource Conflicts ({conflicts.length})</h3>
+        <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Resource Conflicts ({conflicts.length})</h3>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {conflicts.map((conflict) => (
           <div
             key={conflict.resourceId}
-            className="border border-red-100 rounded-lg p-4 bg-red-50/50 hover:bg-red-50 transition-colors cursor-pointer"
+            className="border border-red-100 rounded-lg p-3 sm:p-4 bg-red-50/50 hover:bg-red-50 transition-colors cursor-pointer"
             onClick={() => setSelectedResource(conflict.resourceId)}
           >
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium text-gray-900">{conflict.resourceName}</span>
-              <span className="text-sm text-red-600 font-medium">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-0 mb-2">
+              <span className="font-medium text-gray-900 text-sm sm:text-base">{conflict.resourceName}</span>
+              <span className="text-xs sm:text-sm text-red-600 font-medium">
                 {conflict.totalRequested}h / {conflict.availableCapacity}h
               </span>
             </div>
@@ -59,7 +59,7 @@ export function ConflictPanel() {
               ))}
             </div>
 
-            <div className="flex items-start gap-2 text-sm bg-amber-50 p-2 rounded border border-amber-100">
+            <div className="flex items-start gap-2 text-xs sm:text-sm bg-amber-50 p-2 rounded border border-amber-100">
               <Lightbulb className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
               <span className="text-gray-700">{conflict.recommendation}</span>
             </div>

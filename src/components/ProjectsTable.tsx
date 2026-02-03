@@ -32,30 +32,30 @@ export function ProjectsTable() {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className={`${displaySettings.compactView ? 'p-3' : 'p-4'} border-b border-gray-100`}>
-        <h3 className="text-lg font-semibold text-gray-900">Projects by Business Impact</h3>
+      <div className={`${displaySettings.compactView ? 'p-2 sm:p-3' : 'p-3 sm:p-4'} border-b border-gray-100`}>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Projects by Business Impact</h3>
         {displaySettings.showROI && (
-          <p className="text-sm text-gray-500">Sorted by risk-adjusted NPV</p>
+          <p className="text-xs sm:text-sm text-gray-500">Sorted by risk-adjusted NPV</p>
         )}
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full min-w-[600px]">
           <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
             <tr>
-              <th className="px-4 py-3 text-left">Project</th>
-              <th className="px-4 py-3 text-left">Priority</th>
-              <th className="px-4 py-3 text-left">Silos</th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Project</th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Priority</th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-left hidden sm:table-cell">Silos</th>
               {displaySettings.showROI && (
                 <>
-                  <th className="px-4 py-3 text-right">Est. Value</th>
-                  <th className="px-4 py-3 text-right">Probability</th>
-                  <th className="px-4 py-3 text-right">Risk-Adj NPV</th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-right hidden md:table-cell">Est. Value</th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-right hidden md:table-cell">Probability</th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-right">NPV</th>
                 </>
               )}
-              <th className="px-4 py-3 text-center">Resources</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3"></th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-center hidden sm:table-cell">Resources</th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Status</th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -67,20 +67,20 @@ export function ProjectsTable() {
                 }`}
                 onClick={() => setSelectedProject(project.id)}
               >
-                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
+                <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'}`}>
                   <div>
-                    <p className="font-medium text-gray-900">{project.name}</p>
+                    <p className="font-medium text-gray-900 text-sm sm:text-base">{project.name}</p>
                     {!displaySettings.compactView && (
-                      <p className="text-xs text-gray-500">{project.owner}</p>
+                      <p className="text-xs text-gray-500 hidden sm:block">{project.owner}</p>
                     )}
                   </div>
                 </td>
-                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${priorityBadge[project.priority]}`}>
+                <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'}`}>
+                  <span className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-medium ${priorityBadge[project.priority]}`}>
                     {project.priority}
                   </span>
                 </td>
-                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
+                <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'} hidden sm:table-cell`}>
                   <div className="flex gap-1">
                     {project.requiredSilos.map((silo) => (
                       <div
@@ -94,29 +94,29 @@ export function ProjectsTable() {
                 </td>
                 {displaySettings.showROI && (
                   <>
-                    <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'} text-right font-medium`}>
+                    <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'} text-right font-medium hidden md:table-cell`}>
                       ${project.roi.estimatedValue}M
                     </td>
-                    <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'} text-right`}>
+                    <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'} text-right hidden md:table-cell`}>
                       {project.roi.probability}%
                     </td>
-                    <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'} text-right font-semibold text-green-600`}>
+                    <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'} text-right font-semibold text-green-600 text-sm`}>
                       ${project.roi.riskAdjustedNPV.toFixed(1)}M
                     </td>
                   </>
                 )}
-                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'} text-center`}>
+                <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'} text-center hidden sm:table-cell`}>
                   <div className="flex items-center justify-center gap-1 text-gray-500">
                     <Users className="w-4 h-4" />
                     <span>{project.allocatedResources.length}</span>
                   </div>
                 </td>
-                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${statusColors[project.status]}`}>
+                <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'}`}>
+                  <span className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-medium ${statusColors[project.status]}`}>
                     {project.status}
                   </span>
                 </td>
-                <td className={`px-4 ${displaySettings.compactView ? 'py-2' : 'py-3'}`}>
+                <td className={`px-2 sm:px-4 ${displaySettings.compactView ? 'py-1.5 sm:py-2' : 'py-2 sm:py-3'}`}>
                   <ChevronRight className="w-4 h-4 text-gray-400" />
                 </td>
               </tr>
