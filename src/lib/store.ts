@@ -3,6 +3,19 @@ import { persist } from 'zustand/middleware';
 import { Resource, Project, FunctionalSilo } from '@/types';
 import { mockResources, mockProjects } from '@/data/mockData';
 
+// Search types
+export type SearchResultType = 'project' | 'resource' | 'milestone';
+
+export interface SearchResult {
+  id: string;
+  type: SearchResultType;
+  title: string;
+  subtitle: string;
+  description?: string;
+  projectId?: string;
+  relevance: number;
+}
+
 // Settings types
 export interface NotificationSettings {
   conflicts: boolean;
@@ -38,6 +51,11 @@ interface AppState {
   selectedResource: string | null;
   filterSilo: FunctionalSilo | 'all';
 
+  // Search
+  searchQuery: string;
+  searchResults: SearchResult[];
+  isSearching: boolean;
+
   // Settings
   notificationSettings: NotificationSettings;
   displaySettings: DisplaySettings;
@@ -49,6 +67,11 @@ interface AppState {
   setSelectedResource: (id: string | null) => void;
   setFilterSilo: (silo: FunctionalSilo | 'all') => void;
 
+  // Search actions
+  setSearchQuery: (query: string) => void;
+  performSearch: (query: string) => void;
+  clearSearch: () => void;
+
   // Settings Actions
   setNotificationSettings: (settings: Partial<NotificationSettings>) => void;
   setDisplaySettings: (settings: Partial<DisplaySettings>) => void;
@@ -58,13 +81,18 @@ interface AppState {
 
 export const useAppStore = create<AppState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       // Initial data
       resources: mockResources,
       projects: mockProjects,
       selectedProject: null,
       selectedResource: null,
       filterSilo: 'all',
+
+      // Search
+      searchQuery: '',
+      searchResults: [],
+      isSearching: false,
 
       // Initial settings
       notificationSettings: {
@@ -94,6 +122,84 @@ export const useAppStore = create<AppState>()(
       setSelectedProject: (id) => set({ selectedProject: id }),
       setSelectedResource: (id) => set({ selectedResource: id }),
       setFilterSilo: (silo) => set({ filterSilo: silo }),
+
+      // Search actions
+      setSearchQuery: (query) => set({ searchQuery: query }),
+
+      performSearch: (query) => {
+        const lowerQuery = query.toLowerCase().trim();
+
+        if (!lowerQuery) {
+          set({ searchResults: [], isSearching: false, searchQuery: '' });
+          return;
+        }
+
+        set({ isSearching: true, searchQuery: query });
+
+        const results: SearchResult[] = [];
+        const { projects, resources } = get();
+
+        // Search projects
+        projects.forEach(project => {
+          let relevance = 0;
+          if (project.name.toLowerCase().includes(lowerQuery)) relevance += 10;
+          if (project.description.toLowerCase().includes(lowerQuery)) relevance += 5;
+          if (project.owner.toLowerCase().includes(lowerQuery)) relevance += 3;
+
+          if (relevance > 0) {
+            results.push({
+              id: project.id,
+              type: 'project',
+              title: project.name,
+              subtitle: project.owner,
+              description: project.description,
+              relevance,
+            });
+          }
+
+          // Search milestones within projects
+          project.milestones.forEach(milestone => {
+            if (milestone.name.toLowerCase().includes(lowerQuery)) {
+              results.push({
+                id: milestone.id,
+                type: 'milestone',
+                title: milestone.name,
+                subtitle: project.name,
+                description: `Due ${new Date(milestone.dueDate).toLocaleDateString()}`,
+                projectId: project.id,
+                relevance: 7,
+              });
+            }
+          });
+        });
+
+        // Search resources
+        resources.forEach(resource => {
+          let relevance = 0;
+          if (resource.name.toLowerCase().includes(lowerQuery)) relevance += 10;
+          if (resource.role.toLowerCase().includes(lowerQuery)) relevance += 5;
+          if (resource.skills.some(skill => skill.toLowerCase().includes(lowerQuery))) relevance += 3;
+          if (resource.silo.toLowerCase().includes(lowerQuery)) relevance += 2;
+
+          if (relevance > 0) {
+            results.push({
+              id: resource.id,
+              type: 'resource',
+              title: resource.name,
+              subtitle: resource.role,
+              description: resource.silo,
+              relevance,
+            });
+          }
+        });
+
+        // Sort by relevance
+        results.sort((a, b) => b.relevance - a.relevance);
+
+        set({ searchResults: results.slice(0, 20), isSearching: false });
+      },
+
+      clearSearch: () => set({ searchQuery: '', searchResults: [], isSearching: false }),
 
       // Settings actions
       setNotificationSettings: (settings) =>
